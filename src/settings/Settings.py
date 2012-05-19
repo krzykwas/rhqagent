@@ -4,7 +4,7 @@ import argparse
 
 class Settings(object):
 	"""
-	Responsible for merging configuration for RHQAgent coming from different sources, like 
+	Responsible for merging configuration for PyAgent coming from different sources, like 
 	command line arguments and configuration files. That in the future, for now only command 
 	line options are supported.
 	"""
