@@ -2,11 +2,9 @@
 
 from settings.Settings import Settings
 
-import sys
-
 def main():
 	settings = Settings()
-	settings.updateWithCommandLine(sys.argv)
+	settings.updateWithCommandLine()
 
 if __name__ == "__main__":
 	main()
