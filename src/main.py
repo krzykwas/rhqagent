@@ -2,9 +2,14 @@
 
 from settings.Settings import Settings
 
-def main():
+def getSettings():
 	settings = Settings()
 	settings.updateWithCommandLine()
+
+	return settings
+
+def main():
+	settings = getSettings()
 
 if __name__ == "__main__":
 	main()
