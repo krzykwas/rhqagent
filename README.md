@@ -21,7 +21,11 @@ Additional info
 	The agent for RHQ server is implemented in Python. The project is a part of Google Summer of 
 Code 2012 program. The mentor of this project is Heiko Rupp[3].
 
+Dependencies:
+1) python-wbem[4]
+
 =====
 [1] http://matahariproject.org/
 [2] http://rhq-project.org/display/RHQ/Home
 [3] https://community.jboss.org/people/pilhuhn
+[4] http://pywbem.sourceforge.net/
