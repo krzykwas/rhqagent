@@ -14,22 +14,24 @@ class Settings(object):
 		Set default arguments in here
 		"""
 
-		"URIs of WBEM servers delivering metrics data"
-		self.wbemServersUris = []
+		"URIs of servers delivering metrics data"
+		self.__serversUris = []
+
+	def getServersUris(self):
+		return self.__serversUris
 
 	def updateWithCommandLine(self):
 		parser = argparse.ArgumentParser(
 			description="An agent passing metrics data to an RHQ server"
 		)
 		parser.add_argument(
-			"-ws",
-			"--wbemServers",
+			"--servers",
 			nargs="*",
 			default=[],
 			metavar="server",
-			help="URIs of WBEM servers delivering metrics data"
+			help="URIs of servers delivering metrics data"
 		)
 		
 		args = parser.parse_args()
 		
-		self.wbemServersUris.extend(args.wbemServers)
+		self.__serversUris.extend(args.servers)

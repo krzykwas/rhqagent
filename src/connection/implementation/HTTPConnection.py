@@ -3,4 +3,6 @@
 from ..AbstractConnection import AbstractConnection
 
 class HTTPConnection(AbstractConnection):
-	pass
+	
+	def __init__(self):
+		print("HTTP connection created")
