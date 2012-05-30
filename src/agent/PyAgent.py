@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from connection.ConnectionFactory import ConnectionFactory
+from data_provider.DataProviderFactory import DataProviderFactory #@UnresolvedImport
 
 class PyAgent(object):
 	"""
@@ -9,11 +9,12 @@ class PyAgent(object):
 
 	def __init__(self, settings):
 		self.__settings = settings
-		self.__connectionFactory = ConnectionFactory()
+		self.__dataProviderFactory = DataProviderFactory()
 
 	def openConnections(self):
-		uris = self.__settings.getServersUris()
+		servers = self.__settings.getServers()
 		
-		for uri in uris:
-			protocol = uri[:uri.find(":")]
-			connection = self.__connectionFactory.getConnection(protocol)
+		for server in servers:
+			protocol = server.getProtocol()
+			uri = server.getUri()
+			dataProvider = self.__dataProviderFactory.getDataProvider(protocol, uri)

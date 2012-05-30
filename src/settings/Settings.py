@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from Server import Server
 import argparse
 
 class Settings(object):
@@ -14,11 +15,11 @@ class Settings(object):
 		Set default arguments in here
 		"""
 
-		"URIs of servers delivering metrics data"
-		self.__serversUris = []
+		"Servers delivering metrics data"
+		self.__servers = []
 
-	def getServersUris(self):
-		return self.__serversUris
+	def getServers(self):
+		return self.__servers
 
 	def updateWithCommandLine(self):
 		parser = argparse.ArgumentParser(
@@ -34,4 +35,6 @@ class Settings(object):
 		
 		args = parser.parse_args()
 		
-		self.__serversUris.extend(args.servers)
+		for server in args.servers:
+			protocol, username, password, uri = server.split(":", 3)
+			self.__servers.append(Server(protocol, username, password, uri))
