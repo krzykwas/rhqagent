@@ -12,15 +12,15 @@ class DataProviderFactory(object):
 		"""
 		Basing on the protocol name passed as a second argument finds a proper module which 
 		name is composed of uppercase protocol name and a string <<DataProvider>>, like 
-		WBEMConnection or HTTPConnection, or FTPConnection and so on.
+		WBEMDataProvider or HTTPDataProvider, or FTPDataProvider and so on.
 
 		As a second step, imports a class called in the same manner as the module, 
 		instantiates it and returns the created object.
 
-		In case of any error None is returned instead of an expected dataProvider.
+		In case of any error None is returned instead of an expected data provider instance.
 		"""
 		try:
-			name = protocol.upper() + "DataProvider"
+			name = self.getDataProviderClassName(protocol)
 
 			module = importlib.import_module(".implementation." + name, "data_provider")
 			dataProviderClassObject = getattr(module, name)
@@ -30,3 +30,9 @@ class DataProviderFactory(object):
 			return dataProvider
 		except IOError:
 			return None
+
+	def getDataProviderClassName(self, protocol):
+		if False in [char.isalpha() for char in protocol]:
+			raise ValueError("Invalid protocol name - only letters allowed")
+		
+		return protocol.upper() + "DataProvider"

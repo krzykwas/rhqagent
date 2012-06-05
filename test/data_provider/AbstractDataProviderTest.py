@@ -11,4 +11,13 @@ class AbstractDataProviderTest(unittest.TestCase):
 		instatiated.
 		"""
 
-		self.assertRaises(TypeError, lambda : AbstractDataProvider())
+		self.assertRaises(TypeError, lambda classObject: classObject(), AbstractDataProvider)
+
+	def test_getUsername_IsDefined(self):		
+		self.assertIn("getUsername", dir(AbstractDataProvider), "Method getUsername must be defined")
+		
+	def test_getPassword_IsDefined(self):
+		self.assertIn("getPassword", dir(AbstractDataProvider), "Method getPassword must be defined")
+		
+	def test_getUri_IsDefined(self):
+		self.assertIn("getUri", dir(AbstractDataProvider), "Method getUri must be defined")
