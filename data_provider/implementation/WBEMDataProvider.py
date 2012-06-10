@@ -8,7 +8,7 @@ from ..AbstractDataProvider import AbstractDataProvider
 
 class WBEMDataProvider(AbstractDataProvider):
 	
-	def __init__(self, username, password, uri):
-		AbstractDataProvider.__init__(self, username, password, uri)
+	def __init__(self, srcServer):
+		AbstractDataProvider.__init__(self, srcServer)
 		
 		print("WBEM connection created")

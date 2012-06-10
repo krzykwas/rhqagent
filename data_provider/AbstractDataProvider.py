@@ -11,16 +11,8 @@ class AbstractDataProvider(object):
 	__metaclass__ = ABCMeta
 	
 	@abstractmethod
-	def __init__(self, username, password, uri):
-		self.__username = username
-		self.__password = password
-		self.__uri = uri
+	def __init__(self, srcServer):
+		self.__srcServer = srcServer
 
-	def getUsername(self):
-		return self.__username
-
-	def getPassword(self):
-		return self.__password
-
-	def getUri(self):
-		return self.__uri
+	def getSrcServer(self):
+		return self.__srcServer

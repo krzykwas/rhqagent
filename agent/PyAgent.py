@@ -4,7 +4,7 @@
 # Gdańsk, 24-05-2012
 #
 
-from data_provider.DataProviderFactory import DataProviderFactory #@UnresolvedImport
+from data_provider.DataProviderFactory import DataProviderFactory
 
 class PyAgent(object):
 	"""
@@ -14,15 +14,8 @@ class PyAgent(object):
 	def __init__(self, settings):
 		self.__settings = settings
 		self.__dataProviderFactory = DataProviderFactory()
-
-	def openConnections(self):
-		servers = self.__settings.getServers()
+		self.__dataProviders = {}
 		
-		for server in servers:
-			protocol = server.getProtocol()
-			username = server.getUsername()
-			password = server.getPassword()
-			uri = server.getUri()
-
-			dataProvider = self.__dataProviderFactory.getDataProvider(protocol, 
-			username, password, uri)
+		for srcServerName, srcServer in self.__settings.getSrcServers().items():
+			dataProvider = self.__dataProviderFactory.getDataProvider(srcServer)
+			self.__dataProviders[srcServerName] = dataProvider

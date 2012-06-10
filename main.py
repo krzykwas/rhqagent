@@ -17,7 +17,5 @@ def main():
 	settings = getSettings()
 	agent = PyAgent(settings)
 
-	agent.openConnections()
-
 if __name__ == "__main__":
 	main()
