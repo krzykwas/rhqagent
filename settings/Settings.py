@@ -89,10 +89,9 @@ class Settings(object):
 			srcServer = self.__srcServers[srcServerName]
 			
 			mappedObject = self.__parseMappedObject(dataMappingNode.find("mapped-object"))
-			updatePeriod = dataMappingNode.find("update-period").text
 			dstServersMappings = self.__parseDstServersMappings(dataMappingNode.find("dst-servers-mappings"))
 			
-			dataMapping = DataMapping(srcServer, mappedObject, updatePeriod, dstServersMappings)
+			dataMapping = DataMapping(srcServer, mappedObject, dstServersMappings)
 			self.__dataMappings.append(dataMapping)
 			
 	def __parseMappedObject(self, node):
@@ -109,9 +108,10 @@ class Settings(object):
 		for dstServerMappingNode in node.findall("dst-server-mapping"):
 			name = dstServerMappingNode.find("name").text
 			mapTo = dstServerMappingNode.find("map-to").text
+			updatePeriod = dstServerMappingNode.find("update-period").text
 				
 			dstServer = self.__dstServers[name]
-			dstServerMapping = DstServerMapping(dstServer, mapTo)
+			dstServerMapping = DstServerMapping(dstServer, mapTo, updatePeriod)
 			dstServersMappings.append(dstServerMapping)
 				
 		return dstServersMappings

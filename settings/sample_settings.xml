@@ -45,15 +45,16 @@
 				<index>0</index>
 				<attribute>LoadPercentage</attribute>
 			</mapped-object>
-			<update-period>5</update-period>
 			<dst-servers-mappings>
 				<dst-server-mapping>
 					<name>local</name>
 					<map-to>12</map-to>
+					<update-period>5</update-period>
 				</dst-server-mapping>
 				<dst-server-mapping>
 					<name>remote</name>
 					<map-to>123</map-to>
+					<update-period>15</update-period>
 				</dst-server-mapping>
 			</dst-servers-mappings>
 		</data-mapping>
@@ -68,11 +69,11 @@
 				<index>1</index>
 				<attribute>CurrentClockSpeed</attribute>
 			</mapped-object>
-			<update-period>10</update-period>
 			<dst-servers-mappings>
 				<dst-server-mapping>
 					<name>remote</name>
 					<map-to>241</map-to>
+					<update-period>10</update-period>
 				</dst-server-mapping>
 			</dst-servers-mappings>
 		</data-mapping>
