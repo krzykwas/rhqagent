@@ -7,6 +7,13 @@
 class DstServerMapping(object):
 	
 	def __init__(self, dstServer, mapTo, updatePeriod):
+		"""
+		@param dstServer: describes the server to which collected data is sent
+		@param mapTo: an identifier of a dstServer's resource to which data is mapped,
+			for instance for RHQ it wolud be a scheduleId
+		@param updatePeriod: how often to refresh the measurement
+		"""
+		
 		self.__dstServer = dstServer
 		self.__mapTo = mapTo
 		self.__updatePeriod = updatePeriod

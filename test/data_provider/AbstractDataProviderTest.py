@@ -15,3 +15,12 @@ class AbstractDataProviderTest(unittest.TestCase):
 
 	def test_getSrcServer_IsDefined(self):		
 		self.assertIn("getSrcServer", dir(AbstractDataProvider), "Method getSrcServer must be defined")
+		
+	def test_authenticate_IsDefined(self):
+		self.assertIn("authenticate", dir(AbstractDataProvider), "Method authenticate must be defined")
+		
+	def test_connect_IsDefined(self):
+		self.assertIn("connect", dir(AbstractDataProvider), "Method connect must be defined")
+		
+	def test_getData_IsDefined(self):	
+		self.assertIn("getData", dir(AbstractDataProvider), "Method getData must be defined")

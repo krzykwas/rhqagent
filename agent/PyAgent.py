@@ -5,6 +5,7 @@
 #
 
 from agent.CollectDataThread import CollectDataThread
+from agent.SendDataThread import SendDataThread
 from data_provider.DataProviderFactory import DataProviderFactory
 import time
 
@@ -25,7 +26,8 @@ class PyAgent(object):
 		self.__metricsDataQueue = Queue()
 		
 		#threads
-		self.__collectDataThread = CollectDataThread(args = (self,))
+		self.__collectDataThread = CollectDataThread(args=(self,))
+		self.__sendDataThread = SendDataThread(args=(self,))
 		
 		for srcServerName, srcServer in self.__settings.getSrcServers().items():
 			dataProvider = self.__dataProviderFactory.getDataProvider(srcServer)
@@ -39,12 +41,17 @@ class PyAgent(object):
 	
 	def getSettings(self):
 		return self.__settings
+	
+	def getMetricsDataQueue(self):
+		return self.__metricsDataQueue
 			
 	def beginWork(self):
 		self.__collectDataThread.start()
+		self.__sendDataThread.start()
 		
 		try:
 			while True:
 				time.sleep(1)
 		except KeyboardInterrupt:
 			self.__collectDataThread.stop()
+			self.__sendDataThread.stop()
