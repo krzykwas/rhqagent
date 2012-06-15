@@ -19,8 +19,9 @@ class DstServerMapping(object):
 		
 		self.__dstServer = dstServer
 		self.__mapTo = mapTo
-		self.__updateInterval = timedelta(seconds=int(updateInterval))
 		self.__lastAccessed = datetime.min;
+		
+		self.setUpdateInterval(updateInterval)
 		
 	def getDstServer(self):
 		return self.__dstServer
@@ -30,6 +31,9 @@ class DstServerMapping(object):
 	
 	def getUpdateInterval(self):
 		return self.__updateInterval
+	
+	def setUpdateInterval(self, updateInterval):
+		self.__updateInterval = timedelta(seconds=int(updateInterval))
 	
 	def isDue(self):
 		return (self.__lastAccessed + self.__updateInterval) < datetime.now()
