@@ -20,23 +20,23 @@ class ServerTest(unittest.TestCase):
 
 	def test_getName_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getName", objectFields, "Method getName must be defined")
+		self.assertIn("getName", objectFields, "Method getName not defined")
 
 	def test_getProtocol_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getProtocol", objectFields, "Method getProtocol must be defined")
+		self.assertIn("getProtocol", objectFields, "Method getProtocol not defined")
 
 	def test_getUri_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getUri", objectFields, "Method getUri must be defined")
+		self.assertIn("getUri", objectFields, "Method getUri not defined")
 		
 	def test_getUsername_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getUsername", objectFields, "Method getUsername must be defined")
+		self.assertIn("getUsername", objectFields, "Method getUsername not defined")
 
 	def test_getPassword_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getPassword", objectFields, "Method getPassword must be defined")
+		self.assertIn("getPassword", objectFields, "Method getPassword not defined")
 
 	def test_getName_ReturnsValuePassedInInitMethod(self):
 		self.assertEqual(self.__name, self.__sut.getName(), "Values are different")					

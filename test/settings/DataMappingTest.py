@@ -18,15 +18,15 @@ class DataMappingTest(unittest.TestCase):
 
 	def test_getSrcServer_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getSrcServer", objectFields, "Method getSrcServer must be defined")
+		self.assertIn("getSrcServer", objectFields, "Method getSrcServer not defined")
 
 	def test_getMappedObject_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getMappedObject", objectFields, "Method getMappedObject must be defined")
+		self.assertIn("getMappedObject", objectFields, "Method getMappedObject not defined")
 		
 	def test_getDstServersMappings_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getDstServersMappings", objectFields, "Method getDstServersMappings must be defined")
+		self.assertIn("getDstServersMappings", objectFields, "Method getDstServersMappings not defined")
 
 	def test_getSrcServer_ReturnsValuePassedInInitMethod(self):
 		self.assertIs(self.__srcServer, self.__sut.getSrcServer(), "Values are different")

@@ -19,28 +19,28 @@ class MappedObjectTest(unittest.TestCase):
 		
 	def test_getNamespace_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getNamespace", objectFields, "Method getNamespace must be defined")
+		self.assertIn("getNamespace", objectFields, "Method getNamespace not defined")
 		
 	def test_getName_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getName", objectFields, "Method getName must be defined")
+		self.assertIn("getName", objectFields, "Method getName not defined")
 		
 	def test_getIndex_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getIndex", objectFields, "Method getIndex must be defined")
+		self.assertIn("getIndex", objectFields, "Method getIndex not defined")
 		
 	def test_getAttribute_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getAttribute", objectFields, "Method getAttribute must be defined")
+		self.assertIn("getAttribute", objectFields, "Method getAttribute not defined")
 		
 	def test_getNamespace_ReturnsValuePassedInInitMethod(self):
-		self.assertEqual(self.__namespace, self.__sut.getNamespace(), "Correct value has to be returned")
+		self.assertEqual(self.__namespace, self.__sut.getNamespace(), "Incorrect value returned")
 		
 	def test_getName_ReturnsValuePassedInInitMethod(self):
-		self.assertEqual(self.__name, self.__sut.getName(), "Correct value has to be returned")
+		self.assertEqual(self.__name, self.__sut.getName(), "Incorrect value returned")
 		
 	def test_getIndex_ReturnsValuePassedInInitMethod(self):
-		self.assertEqual(self.__index, self.__sut.getIndex(), "Correct value has to be returned")
+		self.assertEqual(self.__index, self.__sut.getIndex(), "Incorrect value returned")
 		
 	def test_getAttribute_ReturnsValuePassedInInitMethod(self):
-		self.assertEqual(self.__attribute, self.__sut.getAttribute(), "Correct value has to be returned")
+		self.assertEqual(self.__attribute, self.__sut.getAttribute(), "Incorrect value returned")

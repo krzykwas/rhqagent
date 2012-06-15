@@ -49,12 +49,12 @@
 				<dst-server-mapping>
 					<name>local</name>
 					<map-to>12</map-to>
-					<update-period>5</update-period>
+					<update-interval>5</update-interval>
 				</dst-server-mapping>
 				<dst-server-mapping>
 					<name>remote</name>
 					<map-to>123</map-to>
-					<update-period>15</update-period>
+					<update-interval>15</update-interval>
 				</dst-server-mapping>
 			</dst-servers-mappings>
 		</data-mapping>
@@ -73,7 +73,7 @@
 				<dst-server-mapping>
 					<name>remote</name>
 					<map-to>241</map-to>
-					<update-period>10</update-period>
+					<update-interval>10</update-interval>
 				</dst-server-mapping>
 			</dst-servers-mappings>
 		</data-mapping>

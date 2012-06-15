@@ -19,28 +19,28 @@ class MeasurementTest(unittest.TestCase):
 		
 	def test_getSrcServer_IsDefined(self):
 		objectFields = dir(self.__sut)		
-		self.assertIn("getSrcServer", objectFields, "Method getSrcServer must be defined")
+		self.assertIn("getSrcServer", objectFields, "Method getSrcServer not defined")
 		
 	def test_getMappedObject_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getMappedObject", objectFields, "Method getMappedObject must be defined")
+		self.assertIn("getMappedObject", objectFields, "Method getMappedObject not defined")
 	
 	def test_getDstServerMapping_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getDstServerMapping", objectFields, "Method getDstServerMapping must be defined")
+		self.assertIn("getDstServerMapping", objectFields, "Method getDstServerMapping not defined")
 		
 	def test_getValue_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getValue", objectFields, "Method getValue must be defined")
+		self.assertIn("getValue", objectFields, "Method getValue not defined")
 		
 	def test_getSrcServer_InvokedOnNewObject_ReturnsCorrectValue(self):
-		self.assertEqual(self.__srcServer, self.__sut.getSrcServer(), "Proper value is returned")
+		self.assertEqual(self.__srcServer, self.__sut.getSrcServer(), "Incorrect value returned")
 		
 	def test_getMappedObject_InvokedOnNewObject_ReturnsCorrectValue(self):
-		self.assertEqual(self.__mappedObject, self.__sut.getMappedObject(), "Proper value is returned")
+		self.assertEqual(self.__mappedObject, self.__sut.getMappedObject(), "Incorrect value returned")
 		
 	def test_getDstServerMapping_InvokedOnNewObject_ReturnsCorrectValue(self):
-		self.assertEqual(self.__dstServerMapping, self.__sut.getDstServerMapping(), "Proper value is returned")
+		self.assertEqual(self.__dstServerMapping, self.__sut.getDstServerMapping(), "Incorrect value returned")
 		
 	def test_getValue_InvokedOnNewObject_ReturnsCorrectValue(self):
-		self.assertEqual(self.__value, self.__sut.getValue(), "Proper value is returned")
+		self.assertEqual(self.__value, self.__sut.getValue(), "Incorrect value returned")

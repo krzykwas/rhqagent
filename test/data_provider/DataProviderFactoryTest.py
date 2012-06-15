@@ -14,11 +14,11 @@ class DataProviderFactoryTest(unittest.TestCase):
 
 	def test_getDataProvider_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getDataProvider", objectFields, "Method getDataProvider must be defined")
+		self.assertIn("getDataProvider", objectFields, "Method getDataProvider not defined")
 
 	def test_getDataProviderClassName_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getDataProviderClassName", objectFields, "Method getDataProviderClassName must be defined")
+		self.assertIn("getDataProviderClassName", objectFields, "Method getDataProviderClassName not defined")
 		
 	def test_getDataProviderClassName_InvokedWithCorrectProtocolName_ReturnsCorrectlyFormattedClassName(self):
 		formattedClassName = self.__sut.getDataProviderClassName("abc")

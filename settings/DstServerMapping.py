@@ -4,19 +4,23 @@
 # Gdańsk, 09-06-2012
 #
 
+from datetime import datetime
+from datetime import timedelta
+
 class DstServerMapping(object):
 	
-	def __init__(self, dstServer, mapTo, updatePeriod):
+	def __init__(self, dstServer, mapTo, updateInterval):
 		"""
 		@param dstServer: describes the server to which collected data is sent
 		@param mapTo: an identifier of a dstServer's resource to which data is mapped,
 			for instance for RHQ it wolud be a scheduleId
-		@param updatePeriod: how often to refresh the measurement
+		@param updateInterval: how often to refresh the measurement
 		"""
 		
 		self.__dstServer = dstServer
 		self.__mapTo = mapTo
-		self.__updatePeriod = updatePeriod
+		self.__updateInterval = timedelta(seconds=int(updateInterval))
+		self.__lastAccessed = datetime.min;
 		
 	def getDstServer(self):
 		return self.__dstServer
@@ -24,5 +28,11 @@ class DstServerMapping(object):
 	def getMapTo(self):
 		return self.__mapTo
 	
-	def getUpdatePeriod(self):
-		return self.__updatePeriod
+	def getUpdateInterval(self):
+		return self.__updateInterval
+	
+	def isDue(self):
+		return (self.__lastAccessed + self.__updateInterval) < datetime.now()
+	
+	def setLastAccessedNow(self):
+		self.__lastAccessed = datetime.now()

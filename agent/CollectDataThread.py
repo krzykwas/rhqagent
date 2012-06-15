@@ -21,16 +21,22 @@ class CollectDataThread(Thread):
 		
 		while not self.__stopped:
 			for dataMapping in dataMappings:
-				srcServer = dataMapping.getSrcServer()
-				mappedObject = dataMapping.getMappedObject()
-				dataProvider = self.__pyAgent.getDataProviders()[srcServer.getName()]
-				value = dataProvider.getData(mappedObject)
+				self.__handleDataMapping(dataMapping)
 				
-				for dstServerMapping in dataMapping.getDstServersMappings():
-					measurement = Measurement(srcServer, mappedObject, dstServerMapping, value)
-					self.__pyAgent.getMetricsDataQueue().put(measurement)
+			time.sleep(1)
+			
+	def __handleDataMapping(self, dataMapping):
+		srcServer = dataMapping.getSrcServer()
+		mappedObject = dataMapping.getMappedObject()
+		dataProvider = self.__pyAgent.getDataProviders()[srcServer.getName()]
+		value = dataProvider.getData(mappedObject)
 				
-			time.sleep(5)
+		for dstServerMapping in dataMapping.getDstServersMappings():
+			if dstServerMapping.isDue():
+				measurement = Measurement(srcServer, mappedObject, dstServerMapping, value)
+				self.__pyAgent.getMetricsDataQueue().put(measurement)
+				
+				dstServerMapping.setLastAccessedNow()
 			
 	def stop(self):
 		self.__stopped = True

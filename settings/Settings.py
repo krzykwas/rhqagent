@@ -108,10 +108,10 @@ class Settings(object):
 		for dstServerMappingNode in node.findall("dst-server-mapping"):
 			name = dstServerMappingNode.find("name").text
 			mapTo = dstServerMappingNode.find("map-to").text
-			updatePeriod = dstServerMappingNode.find("update-period").text
+			updateInterval = dstServerMappingNode.find("update-interval").text
 				
 			dstServer = self.__dstServers[name]
-			dstServerMapping = DstServerMapping(dstServer, mapTo, updatePeriod)
+			dstServerMapping = DstServerMapping(dstServer, mapTo, updateInterval)
 			dstServersMappings.append(dstServerMapping)
 				
 		return dstServersMappings
