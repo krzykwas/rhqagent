@@ -12,14 +12,14 @@ class CollectDataThread(Thread):
 	
 	def __init__(self, args):
 		Thread.__init__(self, args=args)
+		self.setDaemon(True)
 		
-		self.__stopped = False
 		self.__pyAgent = args[0]
 
 	def run(self):
 		dataMappings = self.__pyAgent.getSettings().getDataMappings()
 		
-		while not self.__stopped:
+		while True:
 			for dataMapping in dataMappings:
 				self.__handleDataMapping(dataMapping)
 				
@@ -37,6 +37,3 @@ class CollectDataThread(Thread):
 				self.__pyAgent.getMetricsDataQueue().put(measurement)
 				
 				dstServerMapping.setLastAccessedNow()
-			
-	def stop(self):
-		self.__stopped = True

@@ -6,6 +6,7 @@
 
 from agent.PyAgent import PyAgent
 from settings.Settings import Settings
+import logging
 
 def getSettings():
 	settings = Settings()
@@ -13,7 +14,12 @@ def getSettings():
 
 	return settings
 
+def configureLogging():
+	logging.basicConfig()
+
 def main():
+	configureLogging()
+	
 	settings = getSettings()
 	agent = PyAgent(settings)
 	agent.beginWork()

@@ -5,7 +5,11 @@
 #
 
 from ..AbstractDataProvider import AbstractDataProvider
+from pywbem.cim_http import AuthError
+from pywbem.cim_operations import CIMError
+import logging
 import pywbem
+import thread
 
 class WBEMDataProvider(AbstractDataProvider):
 	
@@ -13,6 +17,7 @@ class WBEMDataProvider(AbstractDataProvider):
 		AbstractDataProvider.__init__(self, srcServer)
 		
 		self.__connection = None
+		self.__logger = logging.getLogger(__name__)
 	
 	def authenticate(self):
 		"""
@@ -37,7 +42,13 @@ class WBEMDataProvider(AbstractDataProvider):
 		index = int(mappedObject.getIndex())
 		attribute = mappedObject.getAttribute()
 		
-		instances = self.__connection.EnumerateInstances(name, namespace)
-		instance = instances[index]
+		try:
+			instances = self.__connection.EnumerateInstances(name, namespace)
+			instance = instances[index]
 		
-		return instance[attribute]
+			return instance[attribute]
+		except AuthError:
+			self.__logger.critical("Wrong authentication credentials for {0}.".format(self.getSrcServer().getName()))
+			thread.interrupt_main()
+		except CIMError as e:
+			self.__logger.error("CIM exception for {0}: {1}".format(self.getSrcServer().getName(), e.args))

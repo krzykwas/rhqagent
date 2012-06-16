@@ -4,11 +4,11 @@
 # Gdańsk, 19-05-2012
 #
 
-from DstServer import DstServer
-from SrcServer import SrcServer
 from settings.DataMapping import DataMapping
+from settings.DstServer import DstServer
 from settings.DstServerMapping import DstServerMapping
 from settings.MappedObject import MappedObject
+from settings.SrcServer import SrcServer
 from xml.etree import ElementTree
 import argparse
 

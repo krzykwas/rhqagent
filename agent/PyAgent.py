@@ -8,6 +8,7 @@ from agent.CollectDataThread import CollectDataThread
 from agent.SendDataThread import SendDataThread
 from data_provider.DataProviderFactory import DataProviderFactory
 import time
+import sys
 
 try:
 	from queue import Queue #@UnresolvedImport
@@ -53,5 +54,4 @@ class PyAgent(object):
 			while True:
 				time.sleep(1)
 		except KeyboardInterrupt:
-			self.__collectDataThread.stop()
-			self.__sendDataThread.stop()
+			sys.exit(0)
