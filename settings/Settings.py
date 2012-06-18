@@ -22,10 +22,6 @@ class Settings(object):
 	"""
 
 	def __init__(self):
-		"""
-		Set default arguments in here
-		"""
-
 		self.__configurationFile = ""	#Configuration file
 		self.__srcServers = {}			#Servers providing data
 		self.__dstServers = {}			#Servers accepting data
@@ -103,8 +99,12 @@ class Settings(object):
 	def __parseDataMappings(self, node):
 		for dataMappingNode in node.findall("data-mapping"):
 			srcServerName = dataMappingNode.find("src-server").find("name").text
-			srcServer = self.__srcServers[srcServerName]
 			
+			try:
+				srcServer = self.__srcServers[srcServerName]
+			except KeyError:
+				raise ValueError("Unknown source server {0} in data-mapping.".format(srcServerName))
+
 			mappedObject = self.__parseMappedObject(dataMappingNode.find("mapped-object"))
 			dstServersMappings = self.__parseDstServersMappings(dataMappingNode.find("dst-servers-mappings"))
 			
@@ -126,8 +126,12 @@ class Settings(object):
 			name = dstServerMappingNode.find("name").text
 			mapTo = dstServerMappingNode.find("map-to").text
 			updateInterval = dstServerMappingNode.find("update-interval").text
-				
-			dstServer = self.__dstServers[name]
+
+			try:
+				dstServer = self.__dstServers[name]
+			except KeyError:
+				raise ValueError("Unknown destination server {0} in data-mapping.".format(name))
+			
 			dstServerMapping = DstServerMapping(dstServer, mapTo, updateInterval)
 			dstServersMappings.append(dstServerMapping)
 				
