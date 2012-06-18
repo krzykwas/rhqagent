@@ -7,11 +7,17 @@
 	<xs:simpleType name="naturalNumberType">
 		<xs:restriction base="xs:nonNegativeInteger"/>
 	</xs:simpleType>
+	
+	<xs:simpleType name="protocolType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z]*"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
 
 	<xs:complexType name="srcServerType">
 		<xs:sequence>
 			<xs:element name="name" type="stringType"/>
-			<xs:element name="protocol" type="stringType"/>
+			<xs:element name="protocol" type="protocolType"/>
 			<xs:element name="uri" type="stringType"/>
 			<xs:element name="username" type="stringType"/>
 			<xs:element name="password" type="stringType"/>
@@ -27,7 +33,7 @@
 	<xs:complexType name="dstServerType">
 		<xs:sequence>
 			<xs:element name="name" type="stringType"/>
-			<xs:element name="protocol" type="stringType"/>
+			<xs:element name="protocol" type="protocolType"/>
 			<xs:element name="uri" type="stringType"/>
 			<xs:element name="username" type="stringType"/>
 			<xs:element name="password" type="stringType"/>
