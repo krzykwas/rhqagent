@@ -9,8 +9,10 @@ from settings.DstServer import DstServer
 from settings.DstServerMapping import DstServerMapping
 from settings.MappedObject import MappedObject
 from settings.SrcServer import SrcServer
-from xml.etree import ElementTree
 import argparse
+import logging
+import lxml.etree
+import xml.etree.ElementTree
 
 class Settings(object):
 	"""
@@ -28,6 +30,9 @@ class Settings(object):
 		self.__srcServers = {}			#Servers providing data
 		self.__dstServers = {}			#Servers accepting data
 		self.__dataMappings = []		#Mappings between resources in srcServers and dstServers
+		
+		self.__logger = logging.getLogger(__name__)
+		self.__schemaPath = "settings/settings.xsd"
 
 	def getSrcServers(self):
 		return self.__srcServers
@@ -53,9 +58,21 @@ class Settings(object):
 		self.__configurationFile = args.configuration_file
 		self.__parseConfigurationFile()
 
+	def __validateAgainstSchema(self):
+		schema_doc = lxml.etree.parse(self.__schemaPath)
+		schema = lxml.etree.XMLSchema(schema_doc)
+		xml = lxml.etree.parse(self.__configurationFile)
+		
+		valid = schema.validate(xml)
+		
+		if not valid:
+			raise ValueError("Configuration file invalid", schema.error_log)
+
 	def __parseConfigurationFile(self):
-		xml = ElementTree.parse(self.__configurationFile)
-		root = xml.getroot()
+		config = xml.etree.ElementTree.parse(self.__configurationFile)
+		self.__validateAgainstSchema()
+		
+		root = config.getroot()
 		
 		self.__parseSrcServers(root.find("src-servers"))
 		self.__parseDstServers(root.find("dst-servers"))

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified">
+	<xs:simpleType name="stringType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	
+	<xs:simpleType name="naturalNumberType">
+		<xs:restriction base="xs:nonNegativeInteger"/>
+	</xs:simpleType>
+
+	<xs:complexType name="srcServerType">
+		<xs:sequence>
+			<xs:element name="name" type="stringType"/>
+			<xs:element name="protocol" type="stringType"/>
+			<xs:element name="uri" type="stringType"/>
+			<xs:element name="username" type="stringType"/>
+			<xs:element name="password" type="stringType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="srcServersType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="src-server" type="srcServerType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="dstServerType">
+		<xs:sequence>
+			<xs:element name="name" type="stringType"/>
+			<xs:element name="protocol" type="stringType"/>
+			<xs:element name="uri" type="stringType"/>
+			<xs:element name="username" type="stringType"/>
+			<xs:element name="password" type="stringType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="dstServersType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="dst-server" type="dstServerType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="srcServerRefType">
+		<xs:sequence>
+				<xs:element name="name" type="stringType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="mappedObjectType">
+		<xs:sequence>
+			<xs:element name="namespace" type="stringType"/>
+			<xs:element name="name" type="stringType"/>
+			<xs:element name="index" type="naturalNumberType"/>
+			<xs:element name="attribute" type="stringType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="dstServerMappingType">
+		<xs:sequence>
+			<xs:element name="name" type="stringType"/>
+			<xs:element name="map-to" type="stringType"/>
+			<xs:element name="update-interval" type="naturalNumberType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="dstServersMappingsType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="dst-server-mapping" type="dstServerMappingType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="dataMappingType">
+		<xs:sequence>
+			<xs:element name="src-server" type="srcServerRefType"/>
+			<xs:element name="mapped-object" type="mappedObjectType"/>
+			<xs:element name="dst-servers-mappings" type="dstServersMappingsType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="dataMappingsType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="data-mapping" type="dataMappingType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="settingsType">
+		<xs:sequence>
+			<xs:element name="src-servers" type="srcServersType"/>
+			<xs:element name="dst-servers" type="dstServersType"/>
+			<xs:element name="data-mappings" type="dataMappingsType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:element name="settings" type="settingsType"/>
+</xs:schema>

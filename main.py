@@ -19,10 +19,14 @@ def configureLogging():
 
 def main():
 	configureLogging()
+	logger = logging.getLogger(__name__)
 	
-	settings = getSettings()
-	agent = PyAgent(settings)
-	agent.beginWork()
+	try:
+		settings = getSettings()
+		agent = PyAgent(settings)
+		agent.beginWork()
+	except Exception as exception:
+		logger.critical(exception.args)
 
 if __name__ == "__main__":
 	main()
