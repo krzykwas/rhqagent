@@ -28,7 +28,7 @@ class CollectDataThread(Thread):
 	def __handleDataMapping(self, dataMapping):
 		srcServer = dataMapping.getSrcServer()
 		mappedObject = dataMapping.getMappedObject()
-		dataProvider = self.__pyAgent.getDataProviders()[srcServer.getName()]
+		dataProvider = self.__pyAgent.getDataProviders()[srcServer]
 		value = dataProvider.getData(mappedObject)
 				
 		for dstServerMapping in dataMapping.getDstServersMappings():

@@ -6,9 +6,10 @@
 
 from agent.CollectDataThread import CollectDataThread
 from agent.SendDataThread import SendDataThread
-from data_provider.DataProviderFactory import DataProviderFactory
-import time
+from data.provider.DataProviderFactory import DataProviderFactory
+from data.sender.DataSenderFactory import DataSenderFactory
 import sys
+import time
 
 try:
 	from queue import Queue #@UnresolvedImport
@@ -23,22 +24,25 @@ class PyAgent(object):
 	def __init__(self, settings):
 		self.__settings = settings
 		self.__dataProviderFactory = DataProviderFactory()
+		self.__dataSenderFactory = DataSenderFactory()
+		
 		self.__dataProviders = {}
+		self.__dataSenders = {}
 		self.__metricsDataQueue = Queue()
 		
 		#threads
 		self.__collectDataThread = CollectDataThread(args=(self,))
 		self.__sendDataThread = SendDataThread(args=(self,))
 		
-		for srcServerName, srcServer in self.__settings.getSrcServers().items():
-			dataProvider = self.__dataProviderFactory.getDataProvider(srcServer)
-			dataProvider.connect()
-			dataProvider.authenticate()
-			
-			self.__dataProviders[srcServerName] = dataProvider
+		#data providers, data senders
+		self.__initializeDataProviders()
+		self.__initializeDataSenders()
 	
 	def getDataProviders(self):
 		return self.__dataProviders
+	
+	def getDataSenders(self):
+		return self.__dataSenders
 	
 	def getSettings(self):
 		return self.__settings
@@ -55,3 +59,19 @@ class PyAgent(object):
 				time.sleep(1)
 		except KeyboardInterrupt:
 			sys.exit(0)
+
+	def __initializeDataProviders(self):
+		for srcServer in self.__settings.getSrcServers().values():
+			dataProvider = self.__dataProviderFactory.getDataProvider(srcServer)
+			dataProvider.connect()
+			dataProvider.authenticate()
+			
+			self.__dataProviders[srcServer] = dataProvider
+			
+	def __initializeDataSenders(self):
+		for dstServer in self.__settings.getDstServers().values():
+			dataSender = self.__dataSenderFactory.getDataSender(dstServer)
+			dataSender.connect()
+			dataSender.authenticate()
+			
+			self.__dataSenders[dstServer] = dataSender

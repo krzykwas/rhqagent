@@ -19,6 +19,10 @@ class PyAgentTest(unittest.TestCase):
 	def test_getDataProviders_IsDefined(self):
 		objectFields = dir(self.__sut)		
 		self.assertIn("getDataProviders", objectFields, "Method getDataProviders not defined")
+	
+	def test_getDataSenders_IsDefined(self):
+		objectFields = dir(self.__sut)		
+		self.assertIn("getDataSenders", objectFields, "Method getDataSenders not defined")
 		
 	def test_getSettings_IsDefined(self):
 		objectFields = dir(self.__sut)
@@ -35,8 +39,11 @@ class PyAgentTest(unittest.TestCase):
 	def test_getDataProviders_InvokedOnNewObject_ReturnsEmptyDict(self):
 		self.assertEqual({}, self.__sut.getDataProviders(), "Non-empty dict returned")
 		
-	def test_getSettings_InvokedOnNewObject_ReturnsCorrectValue(self):
-		self.assertEqual(self.__settigsMock, self.__sut.getSettings(), "Incorrect value returned")
+	def test_getDataSenders_InvokedOnNewObject_ReturnsEmptyDict(self):
+		self.assertEqual({}, self.__sut.getDataSenders(), "Non-empty dict returned")
+		
+	def test_getSettings_InvokedOnNewObject_ReturnsCorrectObjectPassedInInit(self):
+		self.assertEqual(self.__settigsMock, self.__sut.getSettings(), "Incorrect object returned")
 		
 	def test_getMetricsDataQueue_InvokedOnNewObject_ReturnsEmptyQueue(self):
 		self.assertTrue(self.__sut.getMetricsDataQueue().empty(), "Initially the metrics queue is not empty")

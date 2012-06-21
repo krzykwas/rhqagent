@@ -22,7 +22,7 @@ class DataProviderFactory(object):
 		try:
 			name = self.getDataProviderClassName(srcServer.getProtocol())
 
-			module = importlib.import_module(".implementation." + name, "data_provider")
+			module = importlib.import_module(".implementation." + name, "data.provider")
 			dataProviderClassObject = getattr(module, name)
 
 			dataProvider = dataProviderClassObject(srcServer)

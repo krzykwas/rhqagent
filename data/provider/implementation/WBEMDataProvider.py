@@ -4,7 +4,7 @@
 # Gdańsk, 25-05-2012
 #
 
-from ..AbstractDataProvider import AbstractDataProvider
+from data.provider.AbstractDataProvider import AbstractDataProvider
 from pywbem.cim_http import AuthError
 from pywbem.cim_operations import CIMError
 import logging

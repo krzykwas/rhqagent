@@ -4,7 +4,7 @@
 # Gdańsk, 05-06-2012
 #
 
-from data_provider.DataProviderFactory import DataProviderFactory
+from data.provider.DataProviderFactory import DataProviderFactory
 import unittest
 
 class DataProviderFactoryTest(unittest.TestCase):

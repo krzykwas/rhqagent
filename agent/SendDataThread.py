@@ -25,6 +25,8 @@ class SendDataThread(Thread):
 		while True:
 			try:
 				measurement = metricsDataQueue.get(True, 5)
-				print(measurement.getSrcServer().getName() + ": " + str(measurement.getValue()))
+				dstServer = measurement.getDstServerMapping().getDstServer()
+				dataSender = self.__pyAgent.getDataSenders()[dstServer]
+				dataSender.sendData(measurement)
 			except Empty:
 				pass
