@@ -48,12 +48,12 @@
 			<dst-servers-mappings>
 				<dst-server-mapping>
 					<name>local</name>
-					<map-to>12</map-to>
+					<map-to>CpuPerc.sys</map-to>
 					<update-interval>5</update-interval>
 				</dst-server-mapping>
 				<dst-server-mapping>
 					<name>remote</name>
-					<map-to>123</map-to>
+					<map-to>Native.MemoryInfo.free</map-to>
 					<update-interval>15</update-interval>
 				</dst-server-mapping>
 			</dst-servers-mappings>
@@ -72,7 +72,7 @@
 			<dst-servers-mappings>
 				<dst-server-mapping>
 					<name>remote</name>
-					<map-to>241</map-to>
+					<map-to>Native.MemoryInfo.free</map-to>
 					<update-interval>10</update-interval>
 				</dst-server-mapping>
 			</dst-servers-mappings>
