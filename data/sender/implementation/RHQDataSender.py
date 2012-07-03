@@ -6,8 +6,10 @@
 
 from data.sender.AbstractDataSender import AbstractDataSender
 import json
+import logging
 import platform
 import socket
+import thread
 import time
 import urllib2
 
@@ -31,6 +33,8 @@ class RHQDataSender(AbstractDataSender):
 			self.getDstServer().getPassword()
 		)
 		
+		self.__logger = logging.getLogger(__name__)
+		
 	def authenticate(self):
 		pass
 	
@@ -39,19 +43,26 @@ class RHQDataSender(AbstractDataSender):
 			self.__createPlatform()
 			self.__getSchedules()
 		except Exception as e:
-			print(e)
+			self.__logger.critical("Unexpected exception thrown while initiating connection with RHQ: " + str(e))
+			thread.interrupt_main()
 	
 	def sendData(self, measurement):
 		timestamp = int(time.time())
 		mapping = measurement.getDstServerMapping()
-		scheduleId, updateInterval, scheduleType = self.__getSchedule(mapping.getMapTo())
+		schedule = self.__getSchedule(mapping.getMapTo())
 		
-		mapping.setUpdateInterval(updateInterval)
+		try:
+			mapping.setUpdateInterval(schedule["collectionInterval"])
+		except KeyError:
+			self.__logger.warning("Update interval not defined for schedule {0}".format(mapping.getMapTo()))
 		
-		if scheduleType == "MEASUREMENT":
-			self.__sendMeasurement(scheduleId, timestamp, measurement.getValue())
+		scheduleId = schedule["scheduleId"]
+		value = measurement.getValue()
+		
+		if schedule["type"].lower() == "measurement":
+			self.__sendMeasurement(scheduleId, timestamp, value)
 		else:
-			self.__sendTrait(scheduleId, measurement.getValue())
+			self.__sendTrait(scheduleId, value)
 		
 	def __sendMeasurement(self, scheduleId, timestamp, value):
 		uri = "metric/data/{0}/raw/{1}".format(scheduleId, timestamp)
@@ -82,7 +93,7 @@ class RHQDataSender(AbstractDataSender):
 	def __getSchedule(self, scheduleName):
 		for schedule in self.__schedules:
 			if schedule["scheduleName"] == scheduleName:
-				return schedule["scheduleId"], schedule["collectionInterval"], schedule["type"]
+				return schedule
 			
 		raise ValueError("No schedule named {0} found".format(scheduleName))
 	
@@ -99,7 +110,8 @@ class RHQDataSender(AbstractDataSender):
 			passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
 			passman.add_password(None, uri, self.__username, self.__password)
 			authhandler = urllib2.HTTPBasicAuthHandler(passman)
-			opener = urllib2.build_opener(authhandler, urllib2.HTTPHandler(debuglevel=1))
+			opener = urllib2.build_opener(authhandler)
+			#opener = urllib2.build_opener(authhandler, urllib2.HTTPHandler(debuglevel=1))
 
 			headers = {
 				"accept": "application/json",
