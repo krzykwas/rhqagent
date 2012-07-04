@@ -56,8 +56,14 @@ class PyAgent(object):
 		
 		try:
 			while True:
-				time.sleep(1)
+				for dataSender in self.__dataSenders.values():
+					dataSender.sendAvailabilityState("UP")
+					
+				time.sleep(60)
 		except KeyboardInterrupt:
+			for dataSender in self.__dataSenders.values():
+				dataSender.sendAvailabilityState("DOWN")
+
 			sys.exit(0)
 
 	def __initializeDataProviders(self):

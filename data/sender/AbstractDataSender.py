@@ -31,8 +31,8 @@ class AbstractDataSender(object):
 	@abstractmethod
 	def sendAvailabilityState(self, state):
 		"""
-		Sends a periodical message indicating that
-		either the agent is still alive or the opposite when it is going offline.
+		Sends a message indicating that	either the agent is still alive
+		(state == "UP") or the opposite when it is going offline (state == "DOWN").
 		"""
 		pass
 	

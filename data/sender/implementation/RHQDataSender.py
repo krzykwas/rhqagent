@@ -43,7 +43,7 @@ class RHQDataSender(AbstractDataSender):
 	
 	def sendAvailabilityState(self, state):
 		uri = "resource/" + self.__platformId + "/availability"
-		timestamp = int(time.time())
+		timestamp = self.getTimestamp()
 		data = json.dumps({
 			"type": state,
 			"resourceId": self.__platformId,
@@ -53,15 +53,16 @@ class RHQDataSender(AbstractDataSender):
 		self.__restClient.request(uri, data, "PUT")
 	
 	def sendData(self, measurement):
-		self.sendAvailabilityState("UP")
-		
-		timestamp = int(time.time())
+		timestamp = self.getTimestamp()
 		mapping = measurement.getDstServerMapping()
 		schedule = self.__getSchedule(mapping.getMapTo())
 		
+		if not schedule["enabled"]:
+			self.__logger.warning("Schedule named {0} disabled".format(mapping.getMapTo()))
+			return
+		
 		try:
-			#mapping.setUpdateInterval(schedule["collectionInterval"])
-			pass
+			mapping.setUpdateInterval(schedule["collectionInterval"])
 		except KeyError:
 			self.__logger.warning("Update interval not defined for schedule {0}".format(mapping.getMapTo()))
 		
@@ -73,6 +74,12 @@ class RHQDataSender(AbstractDataSender):
 			self.__sendMeasurement(scheduleId, timestamp, value)
 		elif scheduleType == "trait":
 			self.__sendTrait(scheduleId, value)
+	
+	def getTimestamp(self):
+		"""
+		Returns current timestamp converted to integer. 
+		"""
+		return int(time.time())
 	
 	def __createPlatform(self):
 		uri = "resource/platform/" + self.__platformName
@@ -120,8 +127,8 @@ class RHQDataSender(AbstractDataSender):
 			passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
 			passman.add_password(None, uri, self.__username, self.__password)
 			authhandler = urllib2.HTTPBasicAuthHandler(passman)
-			#opener = urllib2.build_opener(authhandler)
-			opener = urllib2.build_opener(authhandler, urllib2.HTTPHandler(debuglevel=1))
+			opener = urllib2.build_opener(authhandler)
+			#opener = urllib2.build_opener(authhandler, urllib2.HTTPHandler(debuglevel=1))
 
 			headers = {
 				"accept": "application/json",

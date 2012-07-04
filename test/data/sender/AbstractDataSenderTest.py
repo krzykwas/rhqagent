@@ -20,6 +20,9 @@ class AbstractDataProviderTest(unittest.TestCase):
 		
 	def test_connect_IsDefined(self):
 		self.assertIn("connect", dir(AbstractDataSender), "Method connect not defined")
+	
+	def test_sendAvailabilityState_IsDefined(self):	
+		self.assertIn("sendAvailabilityState", dir(AbstractDataSender), "Method sendAvailabilityState not defined")
 		
 	def test_sendData_IsDefined(self):	
 		self.assertIn("sendData", dir(AbstractDataSender), "Method sendData not defined")
