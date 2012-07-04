@@ -27,12 +27,7 @@ class RHQDataSender(AbstractDataSender):
 		
 		self.__schedules = None
 		
-		self.__restClient = self.__RestClient(
-			self.getDstServer().getUri(),
-			self.getDstServer().getUsername(),
-			self.getDstServer().getPassword()
-		)
-		
+		self.__restClient = self.__RestClient(self.getDstServer())
 		self.__logger = logging.getLogger(__name__)
 		
 	def authenticate(self):
@@ -43,26 +38,60 @@ class RHQDataSender(AbstractDataSender):
 			self.__createPlatform()
 			self.__getSchedules()
 		except Exception as e:
-			self.__logger.critical("Unexpected exception thrown while initiating connection with RHQ: " + str(e))
+			self.__logger.critical("Unexpected exception thrown while initiating a connection with RHQ: " + str(e))
 			thread.interrupt_main()
 	
+	def sendAvailabilityState(self, state):
+		uri = "resource/" + self.__platformId + "/availability"
+		timestamp = int(time.time())
+		data = json.dumps({
+			"type": state,
+			"resourceId": self.__platformId,
+			"since": timestamp,
+			"until": timestamp + 3600,
+		})
+		self.__restClient.request(uri, data, "PUT")
+	
 	def sendData(self, measurement):
+		self.sendAvailabilityState("UP")
+		
 		timestamp = int(time.time())
 		mapping = measurement.getDstServerMapping()
 		schedule = self.__getSchedule(mapping.getMapTo())
 		
 		try:
-			mapping.setUpdateInterval(schedule["collectionInterval"])
+			#mapping.setUpdateInterval(schedule["collectionInterval"])
+			pass
 		except KeyError:
 			self.__logger.warning("Update interval not defined for schedule {0}".format(mapping.getMapTo()))
 		
 		scheduleId = schedule["scheduleId"]
+		scheduleType = schedule["type"].lower()
 		value = measurement.getValue()
-		
-		if schedule["type"].lower() == "measurement":
+
+		if scheduleType == "measurement":
 			self.__sendMeasurement(scheduleId, timestamp, value)
-		else:
+		elif scheduleType == "trait":
 			self.__sendTrait(scheduleId, value)
+	
+	def __createPlatform(self):
+		uri = "resource/platform/" + self.__platformName
+		data = json.dumps({"value" : self.__platformType})
+		
+		responseJson = self.__restClient.request(uri, data)
+		response = json.loads(responseJson)
+		self.__platformId = response["resourceId"]
+	
+	def __getSchedule(self, scheduleName):
+		for schedule in self.__schedules:
+			if schedule["scheduleName"] == scheduleName:
+				return schedule
+			
+		raise ValueError("No schedule named {0} found".format(scheduleName))
+	
+	def __getSchedules(self):
+		uri = "resource/{0}/schedules".format(self.__platformId)
+		self.__schedules = json.loads(self.__restClient.request(uri))	
 		
 	def __sendMeasurement(self, scheduleId, timestamp, value):
 		uri = "metric/data/{0}/raw/{1}".format(scheduleId, timestamp)
@@ -78,31 +107,12 @@ class RHQDataSender(AbstractDataSender):
 		uri = "metric/data/{0}/trait".format(scheduleId)
 		self.__restClient.request(uri, json.dumps({"value": value}), "PUT")
 
-	def __createPlatform(self):
-		uri = "resource/platform/" + self.__platformName
-		data = json.dumps({"value" : self.__platformType})
-		
-		responseJson = self.__restClient.request(uri, data)
-		response = json.loads(responseJson)
-		self.__platformId = response["resourceId"]
-		
-	def __getSchedules(self):
-		uri = "resource/{0}/schedules".format(self.__platformId)
-		self.__schedules = json.loads(self.__restClient.request(uri))
-		
-	def __getSchedule(self, scheduleName):
-		for schedule in self.__schedules:
-			if schedule["scheduleName"] == scheduleName:
-				return schedule
-			
-		raise ValueError("No schedule named {0} found".format(scheduleName))
-	
 	class __RestClient(object):
 		
-		def __init__(self, baseUri, username, password):
-			self.__baseUri = baseUri + "/rest/1/"
-			self.__username = username
-			self.__password = password
+		def __init__(self, dstServer):
+			self.__baseUri = dstServer.getUri() + "/rest/1/"
+			self.__username = dstServer.getUsername()
+			self.__password = dstServer.getPassword()
 
 		def request(self, resource, params=None, method=None):
 			uri = self.__baseUri + resource
@@ -110,8 +120,8 @@ class RHQDataSender(AbstractDataSender):
 			passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
 			passman.add_password(None, uri, self.__username, self.__password)
 			authhandler = urllib2.HTTPBasicAuthHandler(passman)
-			opener = urllib2.build_opener(authhandler)
-			#opener = urllib2.build_opener(authhandler, urllib2.HTTPHandler(debuglevel=1))
+			#opener = urllib2.build_opener(authhandler)
+			opener = urllib2.build_opener(authhandler, urllib2.HTTPHandler(debuglevel=1))
 
 			headers = {
 				"accept": "application/json",

@@ -29,7 +29,18 @@ class AbstractDataSender(object):
 		pass
 	
 	@abstractmethod
+	def sendAvailabilityState(self, state):
+		"""
+		Sends a periodical message indicating that
+		either the agent is still alive or the opposite when it is going offline.
+		"""
+		pass
+	
+	@abstractmethod
 	def sendData(self, mappedObject):
+		"""
+		Sends metric data.
+		"""
 		pass
 
 	def getDstServer(self):
