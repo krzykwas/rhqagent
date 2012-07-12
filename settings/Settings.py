@@ -153,8 +153,6 @@ class Settings(object):
 			
 			callback = Callback(functionCode, params, dstServersMappings)
 			callbacks.append(callback)
-			
-			callback()
 		
 		return callbacks
 	
