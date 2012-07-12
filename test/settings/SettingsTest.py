@@ -12,6 +12,10 @@ class SettingsTest(unittest.TestCase):
 	def setUp(self):
 		self.__sut = Settings()
 
+	def test_getCallbacks_IsDefined(self):
+		objectFields = dir(self.__sut)		
+		self.assertIn("getCallbacks", objectFields, "Method getCallbacks not defined")
+
 	def test_getSrcServers_IsDefined(self):
 		objectFields = dir(self.__sut)
 		self.assertIn("getSrcServers", objectFields, "Method getSrcServers not defined")
@@ -27,12 +31,15 @@ class SettingsTest(unittest.TestCase):
 	def test_updateWithCommandLine_IsDefined(self):
 		objectFields = dir(self.__sut)
 		self.assertIn("updateWithCommandLine", objectFields, "Method updateWithCommandLine not defined")
+				
+	def test_getCallbacks_InvokedOnNewObject_ReturnsEmptyList(self):
+		self.assertEqual([], self.__sut.getCallbacks(), "Non-empty list returned")
 		
 	def test_getSrcServers_InvokedOnNewObject_ReturnsEmptyDict(self):
-		self.assertEqual({}, self.__sut.getSrcServers(), "Just after creation the dictionary of source servers is not empty")
+		self.assertEqual({}, self.__sut.getSrcServers(), "Non-empty dict returned")
 		
 	def test_getDstServers_InvokedOnNewObject_ReturnsEmptyDict(self):
-		self.assertEqual({}, self.__sut.getDstServers(), "Just after creation the dictionary of destination servers is not empty")
+		self.assertEqual({}, self.__sut.getDstServers(), "Non-empty dict returned")
 		
 	def test_getDataMappings_InvokedOnNewObject_ReturnsEmptyList(self):
-		self.assertEqual([], self.__sut.getDataMappings(), "Just after creation the list of data mappings is not empty")
+		self.assertEqual([], self.__sut.getDataMappings(), "Non-empty list returned")

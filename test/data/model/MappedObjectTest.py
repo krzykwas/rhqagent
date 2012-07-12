@@ -4,7 +4,7 @@
 # Gdańsk, 10-06-2012
 #
 
-from settings.MappedObject import MappedObject
+from data.model.MappedObject import MappedObject
 import unittest
 
 class MappedObjectTest(unittest.TestCase):

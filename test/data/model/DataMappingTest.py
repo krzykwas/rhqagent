@@ -4,7 +4,7 @@
 # Gdańsk, 10-06-2012
 #
 
-from settings.DataMapping import DataMapping
+from data.model.DataMapping import DataMapping
 import unittest
 
 class DataMappingTest(unittest.TestCase):

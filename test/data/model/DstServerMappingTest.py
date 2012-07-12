@@ -5,7 +5,7 @@
 #
 
 from datetime import timedelta
-from settings.DstServerMapping import DstServerMapping
+from data.model.DstServerMapping import DstServerMapping
 import unittest
 
 class DstServerMappingTest(unittest.TestCase):

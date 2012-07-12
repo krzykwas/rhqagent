@@ -4,7 +4,7 @@
 # Gdańsk, 05-06-2012
 #
 
-from settings.DstServer import DstServer
+from data.model.DstServer import DstServer
 import unittest
 
 class ServerTest(unittest.TestCase):

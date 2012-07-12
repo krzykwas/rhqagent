@@ -5,7 +5,7 @@
 #
 
 from data.provider.implementation.WBEMDataProvider import WBEMDataProvider
-from settings.SrcServer import SrcServer
+from data.model.SrcServer import SrcServer
 import unittest
 
 class WBEMDataProviderTest(unittest.TestCase):

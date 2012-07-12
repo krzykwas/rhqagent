@@ -78,4 +78,49 @@
 			</dst-servers-mappings>
 		</data-mapping>
 	</data-mappings>
+	
+	<callbacks>
+		<callback>
+<function>
+<![CDATA[
+print("1")
+#metric1 = args[0]
+#metric2 = args[1]
+	
+#return metric1[0]+0.75*metric1[1]+0.5*metric1[2] + metric2[0]+0.75*metric2[1]+0.5*metric2[2]
+]]>
+</function>
+			<params>
+			    <param>
+			        <src-server>
+		        		<name>cim-ubuntu</name>
+		    		</src-server>
+		    		<mapped-object>
+		        		<namespace>root/cimv2</namespace>
+		        		<name>Linux_Processor</name>
+		        		<index>0</index>
+		        		<attribute>LoadPercentage</attribute>
+		    		</mapped-object>
+			    </param>
+			    <param>
+			        <src-server>
+		        		<name>cim-ubuntu</name>
+		    		</src-server>
+		    		<mapped-object>
+		        		<namespace>root/cimv2</namespace>
+		        		<name>Linux_Processor</name>
+		        		<index>1</index>
+		        		<attribute>LoadPercentage</attribute>
+		    		</mapped-object>
+			    </param>
+			</params>
+			<dst-servers-mappings>
+		        <dst-server-mapping>
+		            <name>rhq-ubuntu</name>
+		            <map-to>CpuPerc.idle</map-to>
+		            <update-interval>6</update-interval>
+		        </dst-server-mapping>
+		    </dst-servers-mappings>
+		</callback>
+	</callbacks>
 </settings>

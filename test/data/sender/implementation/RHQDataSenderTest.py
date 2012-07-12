@@ -4,9 +4,9 @@
 # Gdańsk, 04-07-2012
 #
 
+from data.model.DstServer import DstServer
 from data.sender.implementation.RHQDataSender import RHQDataSender
 import unittest
-from settings.DstServer import DstServer
 
 class RHQDataSenderTest(unittest.TestCase):
 

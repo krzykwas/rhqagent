@@ -4,11 +4,13 @@
 # Gdańsk, 19-05-2012
 #
 
-from settings.DataMapping import DataMapping
-from settings.DstServer import DstServer
-from settings.DstServerMapping import DstServerMapping
-from settings.MappedObject import MappedObject
-from settings.SrcServer import SrcServer
+from data.model.Callback import Callback
+from data.model.DataMapping import DataMapping
+from data.model.DstServer import DstServer
+from data.model.DstServerMapping import DstServerMapping
+from data.model.MappedObject import MappedObject
+from data.model.Param import Param
+from data.model.SrcServer import SrcServer
 import argparse
 import logging
 import lxml.etree
@@ -17,8 +19,7 @@ import xml.etree.ElementTree
 class Settings(object):
 	"""
 	Responsible for merging configuration for PyAgent coming from different sources - like 
-	command line arguments and configuration files. That in the future, for now only command 
-	line options are supported.
+	command line arguments and configuration files.
 	"""
 
 	def __init__(self):
@@ -26,9 +27,13 @@ class Settings(object):
 		self.__srcServers = {}			#Servers providing data
 		self.__dstServers = {}			#Servers accepting data
 		self.__dataMappings = []		#Mappings between resources in srcServers and dstServers
+		self.__callbacks = []			#User-defined callbacks allowing for calculation of artificial metrics
 		
 		self.__logger = logging.getLogger(__name__)
 		self.__schemaPath = "settings/settings.xsd"
+
+	def getCallbacks(self):
+		return self.__callbacks
 
 	def getSrcServers(self):
 		return self.__srcServers
@@ -73,6 +78,7 @@ class Settings(object):
 		self.__parseSrcServers(root.find("src-servers"))
 		self.__parseDstServers(root.find("dst-servers"))
 		self.__parseDataMappings(root.find("data-mappings"))
+		self.__parseCallbacks(root.find("callbacks"))
 			
 	def __parseSrcServers(self, node):
 		for serverNode in node.findall("src-server"):
@@ -136,3 +142,36 @@ class Settings(object):
 			dstServersMappings.append(dstServerMapping)
 				
 		return dstServersMappings
+	
+	def __parseCallbacks(self, node):
+		callbacks = []
+		
+		for callbackNode in node.findall("callback"):
+			functionCode = callbackNode.find("function").text
+			params = self.__parseParams(callbackNode.find("params"))
+			dstServersMappings = self.__parseDstServersMappings(callbackNode.find("dst-servers-mappings"))
+			
+			callback = Callback(functionCode, params, dstServersMappings)
+			callbacks.append(callback)
+			
+			callback()
+		
+		return callbacks
+	
+	def __parseParams(self, node):
+		params = []
+		
+		for paramNode in node.findall("param"):
+			srcServerName = paramNode.find("src-server").find("name").text
+			
+			try:
+				srcServer = self.__srcServers[srcServerName]
+			except KeyError:
+				raise ValueError("Unknown source server {0} in data-mapping.".format(srcServerName))
+
+			mappedObject = self.__parseMappedObject(paramNode.find("mapped-object"))
+			
+			param = Param(srcServer, mappedObject)
+			params.append(param)
+			
+		return params

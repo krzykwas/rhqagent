@@ -4,7 +4,7 @@
 # Gdańsk, 05-06-2012
 #
 
-from settings.SrcServer import SrcServer
+from data.model.SrcServer import SrcServer
 import unittest
 
 class SrcServerTest(unittest.TestCase):
