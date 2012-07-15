@@ -10,7 +10,7 @@ class Measurement(object):
 	Data is taken from a certain source server and sent to a destination server.
 	"""
 
-	def __init__(self, srcServer, mappedObject, dstServerMapping, value):
+	def __init__(self, srcServer, mappedObject, dstServerMapping, value, timestamp):
 		"""
 		@param srcServer: describes the source server that provides data  
 		@param mappedObject: serves to locate the monitored object in the source server
@@ -22,6 +22,7 @@ class Measurement(object):
 		self.__srcServer = srcServer
 		self.__dstServerMapping = dstServerMapping
 		self.__value = value
+		self.__timestamp = timestamp
 
 	def getMappedObject(self):
 		return self.__mappedObject
@@ -34,3 +35,14 @@ class Measurement(object):
 
 	def getValue(self):
 		return self.__value	
+
+	def getTimestamp(self):
+		return self.__timestamp
+	
+	@property
+	def value(self):
+		return self.getValue()
+
+	@property
+	def timestamp(self):
+		return self.getTimestamp()

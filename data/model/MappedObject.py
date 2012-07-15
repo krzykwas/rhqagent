@@ -6,7 +6,8 @@
 
 class MappedObject(object):
 	"""
-	Resource received by PyAgent and passed to a monitoring server
+	Resource received by PyAgent and passed to a monitoring server.
+	Two MappedObject instances are equal, if they have equal fields.
 	"""
 
 	def __init__(self, namespace, name, index, attribute):
@@ -23,6 +24,25 @@ class MappedObject(object):
 		self.__name = name
 		self.__index = index
 		self.__attribute = attribute
+		
+	def __eq__(self, other):
+		return self.__namespace == other.getNamespace()\
+			and self.__name == other.getName()\
+			and self.__index == other.getIndex()\
+			and self.__attribute == other.getAttribute()
+			
+	def __ne__(self, other):
+		return not self.__eq__(other)
+	
+	def __hash__(self):
+		prime = 13
+		result = 1
+		result = prime * result + self.__namespace.__hash__()
+		result = prime * result + self.__name.__hash__()
+		result = prime * result + self.__index.__hash__()
+		result = prime * result + self.__attribute.__hash__()
+		
+		return result
 
 	def getNamespace(self):
 		return self.__namespace

@@ -4,7 +4,7 @@
 # Gdańsk, 12-07-2012
 #
 
-from data.model.Callback import Callback
+from data.model.callback.Callback import Callback
 import unittest
 
 class CallbackTest(unittest.TestCase):

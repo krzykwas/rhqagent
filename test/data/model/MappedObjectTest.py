@@ -6,6 +6,7 @@
 
 from data.model.MappedObject import MappedObject
 import unittest
+import collections
 
 class MappedObjectTest(unittest.TestCase):
 
@@ -44,3 +45,18 @@ class MappedObjectTest(unittest.TestCase):
 		
 	def test_getAttribute_ReturnsValuePassedInInitMethod(self):
 		self.assertEqual(self.__attribute, self.__sut.getAttribute(), "Incorrect value returned")
+		
+	def test_mappedObject_IsEqualToAnObjectWithSameFields(self):
+		other = MappedObject(self.__namespace, self.__name, self.__index, self.__attribute)
+		self.assertEqual(self.__sut, other, "Objects not considered equal")
+		
+	def test_srcServer_IsNotEqualToAnObjectWithDifferentFields(self):
+		other = MappedObject("different-namespace", self.__name, self.__index, self.__attribute)
+		self.assertNotEqual(self.__sut, other, "Objects considered equal")
+		
+	def test_srcServer_IsHashable(self):
+		self.assertTrue(isinstance(self.__sut, collections.Hashable), "MappedObject is hashable")
+		
+	def test_srcServer_CanBeCorrectlyPutIntoADictionaryAndRetrievedBack(self):
+		d = {self.__sut : 123}
+		self.assertIn(self.__sut, d, "MappedObject not present in the dict, although expected there")

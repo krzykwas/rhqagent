@@ -4,13 +4,13 @@
 # Gdańsk, 19-05-2012
 #
 
-from data.model.Callback import Callback
 from data.model.DataMapping import DataMapping
 from data.model.DstServer import DstServer
 from data.model.DstServerMapping import DstServerMapping
 from data.model.MappedObject import MappedObject
-from data.model.Param import Param
 from data.model.SrcServer import SrcServer
+from data.model.callback.Callback import Callback
+from data.model.callback.Param import Param
 import argparse
 import logging
 import lxml.etree

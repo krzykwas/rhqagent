@@ -32,6 +32,10 @@ class PyAgentTest(unittest.TestCase):
 		objectFields = dir(self.__sut)
 		self.assertIn("getMetricsDataQueue", objectFields, "Method getMetricsDataQueue not defined")
 		
+	def test_getPastMeasurementsManager_IsDefined(self):
+		objectFields = dir(self.__sut)
+		self.assertIn("getPastMeasurementsManager", objectFields, "Method getPastMeasurementsManager not defined")
+		
 	def test_beginWork_IsDefined(self):
 		objectFields = dir(self.__sut)
 		self.assertIn("beginWork", objectFields, "Method beginWork not defined")

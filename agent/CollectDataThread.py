@@ -4,7 +4,7 @@
 # Gdańsk, 12-06-2012
 #
 
-from agent.Measurement import Measurement
+from data.model.Measurement import Measurement
 from threading import Thread
 import time
 
@@ -30,10 +30,18 @@ class CollectDataThread(Thread):
 		mappedObject = dataMapping.getMappedObject()
 		dataProvider = self.__pyAgent.getDataProviders()[srcServer]
 		value = dataProvider.getData(mappedObject)
+		timestamp = time.time()
 				
 		for dstServerMapping in dataMapping.getDstServersMappings():
 			if dstServerMapping.isDue():
-				measurement = Measurement(srcServer, mappedObject, dstServerMapping, value)
+				measurement = Measurement(
+					srcServer,
+					mappedObject,
+					dstServerMapping,
+					value,
+					timestamp
+				)
 				self.__pyAgent.getMetricsDataQueue().put(measurement)
+				self.__pyAgent.getPastMeasurementsManager().put(srcServer, mappedObject, measurement)
 				
 				dstServerMapping.setLastAccessedNow()

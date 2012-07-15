@@ -4,7 +4,7 @@
 # Gdańsk, 12-07-2012
 #
 
-from data.model.Param import Param
+from data.model.callback.Param import Param
 import unittest
 
 class ParamTest(unittest.TestCase):

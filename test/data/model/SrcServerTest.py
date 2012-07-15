@@ -5,6 +5,7 @@
 #
 
 from data.model.SrcServer import SrcServer
+import collections
 import unittest
 
 class SrcServerTest(unittest.TestCase):
@@ -51,4 +52,19 @@ class SrcServerTest(unittest.TestCase):
 		self.assertEqual(self.__username, self.__sut.getUsername(), "Values are different")
 			
 	def test_getPassword_ReturnsValuePassedInInitMethod(self):
-		self.assertEqual(self.__password, self.__sut.getPassword(), "Values are different")	
+		self.assertEqual(self.__password, self.__sut.getPassword(), "Values are different")
+		
+	def test_srcServer_IsEqualToAnObjectWithSameFields(self):
+		other = SrcServer(self.__name, self.__protocol, self.__uri, self.__username, self.__password)
+		self.assertEqual(self.__sut, other, "Objects not considered equal")
+		
+	def test_srcServer_IsNotEqualToAnObjectWithDifferentFields(self):
+		other = SrcServer("different-name", self.__protocol, self.__uri, self.__username, self.__password)
+		self.assertNotEqual(self.__sut, other, "Objects considered equal")
+		
+	def test_srcServer_IsHashable(self):
+		self.assertTrue(isinstance(self.__sut, collections.Hashable), "SrcServer is hashable")
+		
+	def test_srcServer_CanBeCorrectlyPutIntoADictionaryAndRetrievedBack(self):
+		d = {self.__sut : 123}
+		self.assertIn(self.__sut, d, "SrcServer not present in the dict, although expected there")

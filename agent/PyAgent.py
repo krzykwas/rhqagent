@@ -6,6 +6,7 @@
 
 from agent.CollectDataThread import CollectDataThread
 from agent.SendDataThread import SendDataThread
+from data.model.PastMeasurementsManager import PastMeasurementsManager
 from data.provider.DataProviderFactory import DataProviderFactory
 from data.sender.DataSenderFactory import DataSenderFactory
 import sys
@@ -29,6 +30,7 @@ class PyAgent(object):
 		self.__dataProviders = {}
 		self.__dataSenders = {}
 		self.__metricsDataQueue = Queue()
+		self.__pastMeasurementsManager = PastMeasurementsManager()
 		
 		#threads
 		self.__collectDataThread = CollectDataThread(args=(self,))
@@ -49,6 +51,9 @@ class PyAgent(object):
 	
 	def getMetricsDataQueue(self):
 		return self.__metricsDataQueue
+	
+	def getPastMeasurementsManager(self):
+		return self.__pastMeasurementsManager
 			
 	def beginWork(self):
 		self.__collectDataThread.start()
