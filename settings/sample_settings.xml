@@ -81,15 +81,14 @@
 	
 	<callbacks>
 		<callback>
-<function>
-<![CDATA[
-print("1")
-#metric1 = args[0]
-#metric2 = args[1]
+			<function>
+				<![CDATA[
+metric1 = params[0]
+metric2 = params[1]
 	
-#return metric1[0]+0.75*metric1[1]+0.5*metric1[2] + metric2[0]+0.75*metric2[1]+0.5*metric2[2]
-]]>
-</function>
+return metric1[0].value+0.5*metric1[1].value + metric2[0].value+0.5*metric2[1].value
+				]]>
+			</function>
 			<params>
 			    <param>
 			        <src-server>

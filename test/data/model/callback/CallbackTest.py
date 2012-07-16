@@ -45,12 +45,12 @@ return 1
 			[], []
 		)
 		
-		self.assertEqual(sut(), 1)
+		self.assertEqual(sut([]), 1)
 		
 	def test_call_DoesNotRaise_WhenCallbackInitialized_WithEmptyFunctionCode(self):
 		sut = Callback("", [], [])
 		
 		try:
-			sut()
+			sut([])
 		except Exception as e:
 			self.fail("Unexpected {0} raised unexpectedly".format(e))

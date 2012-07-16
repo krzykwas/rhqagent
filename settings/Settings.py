@@ -144,17 +144,13 @@ class Settings(object):
 		return dstServersMappings
 	
 	def __parseCallbacks(self, node):
-		callbacks = []
-		
 		for callbackNode in node.findall("callback"):
 			functionCode = callbackNode.find("function").text
 			params = self.__parseParams(callbackNode.find("params"))
 			dstServersMappings = self.__parseDstServersMappings(callbackNode.find("dst-servers-mappings"))
 			
 			callback = Callback(functionCode, params, dstServersMappings)
-			callbacks.append(callback)
-		
-		return callbacks
+			self.__callbacks.append(callback)
 	
 	def __parseParams(self, node):
 		params = []

@@ -16,14 +16,14 @@ class Callback(object):
 		self.__params = params
 		self.__dstServersMappings = dstServersMappings
 			
-	def __call__(self, *args, **kwargs):
+	def __call__(self, params, *args, **kwargs):
 		tree = ast.parse(self.__function)
 		wrapped = ast.Interactive(body=[tree.body[0]])
 		compiled = compile(wrapped, '<string>', 'single')
 		namespace = {}
 		exec compiled in namespace
-		
-		return namespace["fun"](args)
+
+		return namespace["fun"](params)
 			
 	def getDstServersMappings(self):
 		return self.__dstServersMappings
@@ -32,7 +32,7 @@ class Callback(object):
 		return self.__params
 
 	def wrapWithFunction(self, functionCode):
-		function = "def fun(*args):\n"
+		function = "def fun(params):\n"
 		
 		for statement in functionCode.split("\n"):
 			function += "\t" + statement + "\n"
