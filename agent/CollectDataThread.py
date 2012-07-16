@@ -6,6 +6,7 @@
 
 from data.model.Measurement import Measurement
 from threading import Thread
+import logging
 import time
 
 class CollectDataThread(Thread):
@@ -17,6 +18,9 @@ class CollectDataThread(Thread):
 		self.__pyAgent = args[0]
 		self.__dataProviders = self.__pyAgent.getDataProviders()
 		self.__pastMeasurementsManager = self.__pyAgent.getPastMeasurementsManager()
+		
+		self.__logger = logging.getLogger(__name__)	
+		self.__logger.debug("Starting collecting data")
 
 	def run(self):
 		settings = self.__pyAgent.getSettings()
@@ -49,6 +53,11 @@ class CollectDataThread(Thread):
 					timestamp
 				)
 				
+				self.__logger.debug("Metric for {0}takes value {1}".format(
+					self.__dataSourceToStr(dataMapping),
+					value
+				))
+				
 				self.__pyAgent.getMetricsDataQueue().put(measurement)
 				dstServerMapping.setLastAccessedNow()
 				
@@ -79,7 +88,21 @@ class CollectDataThread(Thread):
 					params.append(self.__pastMeasurementsManager.get(srcServer, mappedObject))
 					
 				result = callback(params)
+				
+				temp = ""
+				for param in callback.getParams():
+					temp += self.__dataSourceToStr(param)	
+				self.__logger.debug("Artificial metric for {0}takes value {1}".format(temp, result))
+				
 				artificialMeasurement = Measurement(None, None, dstServerMapping, result, time.time())
 				
 				self.__pyAgent.getMetricsDataQueue().put(artificialMeasurement)
 				dstServerMapping.setLastAccessedNow()
+
+	def __dataSourceToStr(self, dataSource):
+		return "{0}.{1}.{2}@{3}, ".format(
+			dataSource.getMappedObject().getName(),
+			dataSource.getMappedObject().getIndex(),
+			dataSource.getMappedObject().getAttribute(),
+			dataSource.getSrcServer().getName()
+		)

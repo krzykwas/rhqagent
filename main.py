@@ -14,19 +14,18 @@ def getSettings():
 
 	return settings
 
-def configureLogging():
-	logging.basicConfig()
-
 def main():
-	configureLogging()
-	logger = logging.getLogger(__name__)
+	settings = getSettings()
 	
 	try:
-		settings = getSettings()
+		logging.basicConfig(level=settings.getDebugLevel())
+		logger = logging.getLogger(__name__)
+		
 		agent = PyAgent(settings)
 		agent.beginWork()
 	except Exception as exception:
 		logger.critical(exception.args)
+		logging.shutdown()
 
 if __name__ == "__main__":
 	main()

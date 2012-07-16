@@ -13,17 +13,17 @@ class PastMeasurementsManager(object):
 	with a bounded list of appropriate measurements taken in the past
 	"""
 
-	def __init__(self, period=100):
+	def __init__(self, size=100):
 		#The maximal number of past measurements stored for a given source server and mapped object 
-		self.__PERIOD = period
+		self.__SIZE = size
 		
-		#A dict: (SrcServer, MappedObject) -> list of Measurement of at most self.__PERIOD size
+		#A dict: (SrcServer, MappedObject) -> list of Measurement of at most self.__SIZE size
 		self.__pastMeasurements = {}
 
 	def get(self, srcServer, mappedObject):
 		"""
-		Returns a list of self.__PERIOD most recent measurements taken for the pair
-		(srcServer, mappedObject). If there are less than self.__PERIOD such measurements,
+		Returns a list of self.__SIZE most recent measurements taken for the pair
+		(srcServer, mappedObject). If there are less than self.__SIZE such measurements,
 		the missing entries are filled with fake measurements with value equal to 0, timestamp
 		and dstServerMapping equal to - respectively - the timestamp and the dstServerMapping
 		of the oldest known measurement. 
@@ -49,7 +49,7 @@ class PastMeasurementsManager(object):
 		"""
 		Adding fake measurements if needed
 		"""
-		missingCount = self.__PERIOD - len(measurements)
+		missingCount = self.__SIZE - len(measurements)
 		
 		for i in range(missingCount): #@UnusedVariable
 			fakeMeasurement = Measurement(srcServer, mappedObject, dstServerMapping, 0, timestamp)
@@ -60,7 +60,7 @@ class PastMeasurementsManager(object):
 	def put(self, srcServer, mappedObject, measurement):
 		"""
 		Inserts measurement at the first position of the list of measurements
-		mapped to the tuple (srcServer, mappedObject). If the list gets longer than self.__PERIOD,
+		mapped to the tuple (srcServer, mappedObject). If the list gets longer than self.__SIZE,
 		the oldest measurement is removed. 
 		"""
 		key = (srcServer, mappedObject,)
@@ -71,5 +71,5 @@ class PastMeasurementsManager(object):
 		measurements = self.__pastMeasurements[key]	
 		measurements.insert(0, measurement)
 		
-		if len(measurements) > self.__PERIOD:
-			del measurements[self.__PERIOD]
+		if len(measurements) > self.__SIZE:
+			del measurements[self.__SIZE]

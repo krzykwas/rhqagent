@@ -9,6 +9,7 @@ from agent.SendDataThread import SendDataThread
 from data.model.PastMeasurementsManager import PastMeasurementsManager
 from data.provider.DataProviderFactory import DataProviderFactory
 from data.sender.DataSenderFactory import DataSenderFactory
+import logging
 import sys
 import time
 
@@ -30,7 +31,7 @@ class PyAgent(object):
 		self.__dataProviders = {}
 		self.__dataSenders = {}
 		self.__metricsDataQueue = Queue()
-		self.__pastMeasurementsManager = PastMeasurementsManager()
+		self.__pastMeasurementsManager = PastMeasurementsManager(self.__settings.getPastMeasurementsSize())
 		
 		#threads
 		self.__collectDataThread = CollectDataThread(args=(self,))
@@ -39,6 +40,8 @@ class PyAgent(object):
 		#data providers, data senders
 		self.__initializeDataProviders()
 		self.__initializeDataSenders()
+		
+		self.__logger = logging.getLogger(__name__)	
 	
 	def getDataProviders(self):
 		return self.__dataProviders
@@ -56,6 +59,8 @@ class PyAgent(object):
 		return self.__pastMeasurementsManager
 			
 	def beginWork(self):
+		self.__logger.debug("Starting")
+		
 		self.__collectDataThread.start()
 		self.__sendDataThread.start()
 		
@@ -66,9 +71,12 @@ class PyAgent(object):
 					
 				time.sleep(60)
 		except KeyboardInterrupt:
+			self.__logger.debug("Shutting down")
+			
 			for dataSender in self.__dataSenders.values():
 				dataSender.sendAvailabilityState("DOWN")
 
+			logging.shutdown()
 			sys.exit(0)
 
 	def __initializeDataProviders(self):

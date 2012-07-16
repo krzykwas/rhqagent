@@ -5,6 +5,7 @@
 #
 
 from threading import Thread
+import logging
 
 try:
 	from queue import Empty #@UnresolvedImport
@@ -18,6 +19,9 @@ class SendDataThread(Thread):
 		self.setDaemon(True)
 		
 		self.__pyAgent = args[0]
+		
+		self.__logger = logging.getLogger(__name__)
+		self.__logger.debug("Starting sending data")
 
 	def run(self):
 		metricsDataQueue = self.__pyAgent.getMetricsDataQueue()

@@ -27,6 +27,14 @@ class SettingsTest(unittest.TestCase):
 	def test_getDataMappings_IsDefined(self):
 		objectFields = dir(self.__sut)
 		self.assertIn("getDataMappings", objectFields, "Method getDataMappings not defined")
+	
+	def test_getPastMeasurementsSize_IsDefined(self):
+		objectFields = dir(self.__sut)
+		self.assertIn("getPastMeasurementsSize", objectFields, "Method getPastMeasurementsSize not defined")
+		
+	def test_getDebugLevel_IsDefined(self):
+		objectFields = dir(self.__sut)
+		self.assertIn("getDebugLevel", objectFields, "Method getDebugLevel not defined")	
 
 	def test_updateWithCommandLine_IsDefined(self):
 		objectFields = dir(self.__sut)
@@ -43,3 +51,9 @@ class SettingsTest(unittest.TestCase):
 		
 	def test_getDataMappings_InvokedOnNewObject_ReturnsEmptyList(self):
 		self.assertEqual([], self.__sut.getDataMappings(), "Non-empty list returned")
+		
+	def test_getPastMeasurementsSize_InvokedOnNewObject_ReturnsNone(self):
+		self.assertIs(None, self.__sut.getPastMeasurementsSize(), "None not returned")
+		
+	def test_getDebugLevel_InvokedOnNewObject_ReturnsNone(self):
+		self.assertIs(None, self.__sut.getDebugLevel(), "None not returned")

@@ -63,6 +63,12 @@ class RHQDataSender(AbstractDataSender):
 		
 		try:
 			mapping.setUpdateInterval(schedule["collectionInterval"])
+			self.__logger.debug(
+				"Update interval for schedule named {0} overriden with {1}".format(
+					mapping.getMapTo(),
+					schedule["collectionInterval"]
+				)
+			)
 		except KeyError:
 			self.__logger.warning("Update interval not defined for schedule {0}".format(mapping.getMapTo()))
 		
@@ -88,6 +94,8 @@ class RHQDataSender(AbstractDataSender):
 		responseJson = self.__restClient.request(uri, data)
 		response = json.loads(responseJson)
 		self.__platformId = response["resourceId"]
+		
+		self.__logger.debug("Platform with id {0} created".format(self.__platformId))
 	
 	def __getSchedule(self, scheduleName):
 		for schedule in self.__schedules:

@@ -28,8 +28,9 @@ class Settings(object):
 		self.__dstServers = {}			#Servers accepting data
 		self.__dataMappings = []		#Mappings between resources in srcServers and dstServers
 		self.__callbacks = []			#User-defined callbacks allowing for calculation of artificial metrics
+		self.__pastMeasurementsSize = None	#The number of past measurements stored for each metric
+		self.__debugLevel = None		#The higher value, the more info printed
 		
-		self.__logger = logging.getLogger(__name__)
 		self.__schemaPath = "settings/settings.xsd"
 
 	def getCallbacks(self):
@@ -44,20 +45,51 @@ class Settings(object):
 	def getDataMappings(self):
 		return self.__dataMappings
 	
+	def getPastMeasurementsSize(self):
+		return self.__pastMeasurementsSize
+	
+	def getDebugLevel(self):
+		return self.__debugLevel
+	
 	def updateWithCommandLine(self):
-		parser = argparse.ArgumentParser(
-			description="An agent passing metrics data to an RHQ server"
-		)
-		parser.add_argument(
-			"--configuration-file",
-			required=True,
-			help="""Configuration file"""
-		)
+		debugLevels = {
+			"CRITICAL"	: logging.CRITICAL,
+			"ERROR"		: logging.ERROR,
+			"WARNING"	: logging.WARNING,
+			"INFO"		: logging.INFO,
+			"DEBUG"		: logging.DEBUG,
+		}
 		
+		parser = self.__createParser(debugLevels)
 		args = parser.parse_args()
 
 		self.__configurationFile = args.configuration_file
+		self.__pastMeasurementsSize = args.past_measurements_size
+		self.__debugLevel = debugLevels[args.debug_level]
+		
 		self.__parseConfigurationFile()
+
+	def __createParser(self, debugLevels):
+		parser = argparse.ArgumentParser(description="An agent passing metrics data to an RHQ server")
+		parser.add_argument(
+			"--configuration-file",
+			help="""Configuration file""",
+			required=True,
+		)
+		parser.add_argument(
+			"--past-measurements-size",
+			default=100,
+			help="""The number of past measurements stored for each metric""",
+			type=int,
+		)
+		parser.add_argument(
+			"--debug-level",
+			choices=debugLevels.keys(),
+			default="CRITICAL",
+			help="""The higher, the more info printed""",
+		)
+		
+		return parser
 
 	def __validateAgainstSchema(self):
 		schema_doc = lxml.etree.parse(self.__schemaPath)
