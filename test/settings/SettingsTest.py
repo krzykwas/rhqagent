@@ -34,7 +34,11 @@ class SettingsTest(unittest.TestCase):
 		
 	def test_getDebugLevel_IsDefined(self):
 		objectFields = dir(self.__sut)
-		self.assertIn("getDebugLevel", objectFields, "Method getDebugLevel not defined")	
+		self.assertIn("getDebugLevel", objectFields, "Method getDebugLevel not defined")
+		
+	def test_getSetup_IsDefined(self):
+		objectFields = dir(self.__sut)
+		self.assertIn("getSetup", objectFields, "Method getSetup not defined")
 
 	def test_updateWithCommandLine_IsDefined(self):
 		objectFields = dir(self.__sut)
@@ -57,3 +61,6 @@ class SettingsTest(unittest.TestCase):
 		
 	def test_getDebugLevel_InvokedOnNewObject_ReturnsNone(self):
 		self.assertIs(None, self.__sut.getDebugLevel(), "None not returned")
+
+	def test_getSetup_InvokedOnNewObject_ReturnsFalse(self):
+		self.assertFalse(self.__sut.getSetup(), "Posistive value returned")

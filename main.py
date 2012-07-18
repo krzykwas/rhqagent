@@ -7,12 +7,21 @@
 from agent.PyAgent import PyAgent
 from settings.Settings import Settings
 import logging
+from settings.configurationFile.Generator import Generator
 
 def getSettings():
 	settings = Settings()
 	settings.updateWithCommandLine()
 
 	return settings
+
+def generateConfigurationFile(settings):
+	configurationFileGenerator = Generator(settings)
+	configurationFileGenerator.generate()
+
+def startPyAgent(settings):
+	agent = PyAgent(settings)
+	agent.beginWork()
 
 def main():
 	settings = getSettings()
@@ -21,8 +30,10 @@ def main():
 		logging.basicConfig(level=settings.getDebugLevel())
 		logger = logging.getLogger(__name__)
 		
-		agent = PyAgent(settings)
-		agent.beginWork()
+		if settings.getSetup():
+			generateConfigurationFile(settings)
+		else:
+			startPyAgent(settings)
 	except Exception as exception:
 		logger.critical(exception.args)
 		logging.shutdown()
