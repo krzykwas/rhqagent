@@ -44,7 +44,8 @@ class DataProviderFactory(object):
 			
 			module = importlib.import_module(".implementation", "data.provider")
 			for importer, modname, ispkg in pkgutil.iter_modules(module.__path__):
-				dataProviderNames.append(modname)
+				if modname.endswith("DataProvider"):
+					dataProviderNames.append(modname)
 				
 			return dataProviderNames
 		except IOError:
