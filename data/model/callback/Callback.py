@@ -21,7 +21,7 @@ class Callback(object):
 		wrapped = ast.Interactive(body=[tree.body[0]])
 		compiled = compile(wrapped, '<string>', 'single')
 		namespace = {}
-		exec compiled in namespace
+		exec(compiled, namespace)
 
 		return namespace["fun"](params)
 			

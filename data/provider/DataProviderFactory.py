@@ -5,6 +5,7 @@
 #
 
 import importlib
+import pkgutil
 
 class DataProviderFactory(object):
 
@@ -36,3 +37,15 @@ class DataProviderFactory(object):
 			raise ValueError("Invalid protocol name - only letters allowed")
 		
 		return protocol.upper() + "DataProvider"
+	
+	def getDataProviderNames(self):
+		try:
+			dataProviderNames = []
+			
+			module = importlib.import_module(".implementation", "data.provider")
+			for importer, modname, ispkg in pkgutil.iter_modules(module.__path__):
+				dataProviderNames.append(modname)
+				
+			return dataProviderNames
+		except IOError:
+			return None

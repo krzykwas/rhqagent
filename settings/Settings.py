@@ -64,12 +64,13 @@ class Settings(object):
 		self.__debugLevel = debugLevels[args.debug_level]
 		self.__setup = args.setup
 		
-		configurationFileParser = Parser(
-			self,
-			self.__configurationFile,
-			self.__schemaPath
-		)
-		configurationFileParser.parse()
+		if not self.__setup:
+			configurationFileParser = Parser(
+				self,
+				self.__configurationFile,
+				self.__schemaPath
+			)
+			configurationFileParser.parse()
 
 	def __createParser(self, debugLevels):
 		parser = argparse.ArgumentParser(
@@ -84,7 +85,7 @@ class Settings(object):
 		parser.add_argument(
 			"--debug-level",
 			choices=debugLevels.keys(),
-			default="CRITICAL",
+			default="INFO",
 			help="""The higher, the more info printed""",
 		)
 		parser.add_argument(
