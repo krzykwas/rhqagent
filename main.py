@@ -34,6 +34,8 @@ def main():
 			generateConfigurationFile(settings)
 		else:
 			startPyAgent(settings)
+	except KeyboardInterrupt:
+		pass
 	except Exception as exception:
 		logger.critical(exception.args)
 		logging.shutdown()
