@@ -4,8 +4,8 @@
 # Gdańsk, 10-06-2012
 #
 
-from datetime import timedelta
 from data.model.DstServerMapping import DstServerMapping
+from datetime import timedelta
 import unittest
 
 class DstServerMappingTest(unittest.TestCase):
@@ -25,7 +25,7 @@ class DstServerMappingTest(unittest.TestCase):
 		objectFields = dir(self.__sut)
 		self.assertIn("getMapTo", objectFields, "Method getMapTo not defined")
 		
-	def test_getUpdatePeriod_IsDefined(self):
+	def test_getUpdateInterval_IsDefined(self):
 		objectFields = dir(self.__sut)
 		self.assertIn("getUpdateInterval", objectFields, "Method getUpdateInterval not defined")
 				
@@ -59,6 +59,16 @@ class DstServerMappingTest(unittest.TestCase):
 		
 	def test_setUpdateInterval_WithNone_RaisesTypeError(self):
 		self.assertRaises(TypeError, lambda: self.__sut.setUpdateInterval(None))
+		
+	def test_setUpdateInterval_WithTimedelta_ProperlyAssignsValue(self):
+		expected = timedelta(3)
+		self.__sut.setUpdateInterval(expected)
+		self.assertEqual(expected, self.__sut.getUpdateInterval(), "Incorrect value returned")
+		
+	def test_setUpdateInterval_WithInt_ProperlyAssignsValue(self):
+		expected = 5
+		self.__sut.setUpdateInterval(timedelta(seconds=expected))
+		self.assertEqual(expected, self.__sut.getUpdateInterval().total_seconds(), "Incorrect value returned")
 		
 	def test_setUpdateInterval_ProperlyChangesInternalObjectState(self):
 		updateInterval = 6

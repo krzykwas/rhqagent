@@ -33,7 +33,10 @@ class DstServerMapping(object):
 		return self.__updateInterval
 	
 	def setUpdateInterval(self, updateInterval):
-		self.__updateInterval = timedelta(seconds=int(updateInterval))
+		if isinstance(updateInterval, timedelta):
+			self.__updateInterval = updateInterval
+		else:
+			self.__updateInterval = timedelta(seconds=int(updateInterval))
 	
 	def isDue(self):
 		return (self.__lastAccessed + self.__updateInterval) < datetime.now()

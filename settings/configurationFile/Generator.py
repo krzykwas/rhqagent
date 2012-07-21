@@ -32,7 +32,7 @@ class Generator(object):
 		"""
 		self.__generatedSettings = Settings()
 		
-		self.__logger = logging.getLogger(__name__)
+		self.__configureLogger()
 		
 		#For compatibility between Python 2.x and 3.x
 		try:
@@ -43,10 +43,24 @@ class Generator(object):
 	def generate(self):
 		self.__logger.info("========= Generating a configuration file for PyAgent =========")
 		self.__getSrcServers()
-		#self.__getDstServers()
-		#self.__getDataMappings()
+		self.__getDstServers()
+		self.__getDataMappings()
 		
 		self.__createConfigurationFile()
+		
+	def __configureLogger(self):
+		class GeneratorFormatter(logging.Formatter):
+			def __init__(self):
+				logging.Formatter.__init__(self, "[generator]  %(message)s", None)
+		
+		class GeneratorHandler(logging.StreamHandler):
+			def __init__(self):
+				logging.StreamHandler.__init__(self)
+				self.setFormatter(GeneratorFormatter())
+		
+		self.__logger = logging.getLogger(__name__)
+		self.__logger.addHandler(GeneratorHandler())
+		self.__logger.propagate = False
 		
 	def __getSrcServers(self):
 		self.__logger.info("*** Configuring source servers")
@@ -57,13 +71,7 @@ class Generator(object):
 		self.__logger.info("Defined source servers:")
 		self.__printList(self.__generatedSettings.getSrcServers())
 		
-		while True:
-			self.__logger.info("Define a new source server? [Y/n]")
-			response = self.__input()
-			
-			if response.lower() == "n":
-				break
-
+		while self.__getValue("Define a new source server? [Y/n]").lower() != "n":
 			self.__tryAddNewSrcServer()
 			
 			#Show currently defined servers
@@ -77,23 +85,9 @@ class Generator(object):
 		if name in self.__generatedSettings.getSrcServers():
 			self.__logger.info("Choose a new name, this one has been already used")
 		else:
-			while True:
-				protocols = self.__getExistingSrcProtocols()
-				self.__logger.info("Protocol:")
-				self.__logger.info("[{0}]".format(" ,".join(protocols)))
-				protocol = self.__input()
-				
-				if protocol in protocols:
-					break
-				else:
-					self.__logger.info("Choose a protocol from the list below")
-			
-			self.__logger.info("Server uri:")
-			uri = self.__input()
-			self.__logger.info("Username:")
-			username = self.__input()
-			self.__logger.info("Password:")
-			password = self.__input()
+			protocols = self.__getExistingSrcProtocols()
+			protocol = self.__getValueFromList("Protocol:", protocols)
+			uri, username, password = self.__getValues("Server uri:", "Username:", "Password:")
 			
 			srcServer = SrcServer(name, protocol, uri, username, password)
 			self.__generatedSettings.getSrcServers()[srcServer.getName()] = srcServer
@@ -107,13 +101,7 @@ class Generator(object):
 		self.__logger.info("Defined destination servers:")
 		self.__printList(self.__generatedSettings.getDstServers())
 			
-		while True:
-			self.__logger.info("Define a new destination server? [Y/n]")
-			response = self.__input()
-			
-			if response.lower() == "n":
-				break
-
+		while self.__getValue("Define a new destination server? [Y/n]").lower() != "n":
 			self.__tryAddNewDstServer()
 			
 			#Show currently defined servers
@@ -127,23 +115,9 @@ class Generator(object):
 		if name in self.__generatedSettings.getDstServers():
 			self.__logger.info("Choose a new name, this one has been already used")
 		else:
-			while True:
-				protocols = self.__getExistingDstProtocols()
-				self.__logger.info("Protocol:")
-				self.__logger.info("[{0}]".format(" ,".join(protocols)))
-				protocol = self.__input()
-
-				if protocol in protocols:
-					break			
-				else:
-					self.__logger.info("Choose a protocol from the list below")
-
-			self.__logger.info("Server uri:")
-			uri = self.__input()
-			self.__logger.info("Username:")
-			username = self.__input()
-			self.__logger.info("Password:")
-			password = self.__input()
+			protocols = self.__getExistingDstProtocols()
+			protocol = self.__getValueFromList("Protocol:", protocols)
+			uri, username, password = self.__getValues("Server uri:", "Username:", "Password:")
 			
 			dstServer = DstServer(name, protocol, uri, username, password)
 			self.__generatedSettings.getDstServers()[dstServer.getName()] = dstServer
@@ -165,13 +139,7 @@ class Generator(object):
 	def __getDataMappings(self):
 		self.__logger.info("*** Configuring data mappings")
 			
-		while True:
-			self.__logger.info("Define a new data mapping? [Y/n]")
-			response = self.__input()
-			
-			if response.lower() == "n":
-				break
-
+		while self.__getValue("Define a new data mapping? [Y/n]").lower() != "n":
 			self.__tryAddNewDataMapping()
 			
 	def __tryAddNewDataMapping(self):
@@ -187,20 +155,14 @@ class Generator(object):
 		
 		while True:
 			dstServer = self.__getDestinationServer(dstServers)
-			
-			self.__logger.info("Choose a property to which data should be bound")
-			mapTo = self.__input()
-			
-			self.__logger.info("How often to refresh the measurement (in seconds)?")
-			updateInterval = self.__input()
+			mapTo = self.__getValue("Choose a property to which data should be bound")
+			updateInterval = self.__getValue("How often to refresh the measurement (in seconds)?")
 			
 			dstServerMapping = DstServerMapping(dstServer, mapTo, updateInterval)
 			dstServersMappings.append(dstServerMapping)
 			
-			self.__logger.info("Define a new destination server mapping? [Y/n]")
-			response = self.__input()
-			
-			if response.lower() == "n":
+			self.__logger.info("*** Do you want to send the same data somewhere else as well?")
+			if self.__getValue("Define a new destination server mapping? [Y/n]").lower() == "n":
 				break
 		
 		dataMapping = DataMapping(srcServer, mappedObject, dstServersMappings)
@@ -208,52 +170,49 @@ class Generator(object):
 	
 	def __getSourceServer(self, srcServers):
 		self.__logger.info("*** Where to take the data from?")
-		
-		while True:
-			self.__logger.info("Choose source server out of:")
-			self.__logger.info("[{0}]".format(", ".join(srcServers)))
-			
-			srcServerName = self.__input()
-		
-			if srcServerName in srcServers:
-				break
-			else:
-				self.__logger.info("There is no source server called {0}".format(srcServerName))
+		srcServerName = self.__getValueFromList("Source server:", srcServers)
 				
 		return srcServers[srcServerName]
 	
 	def __getDestinationServer(self, dstServers):
-		while True:
-			self.__logger.info("Choose destination server out of:")
-			self.__logger.info("[{0}]".format(", ".join(dstServers)))
+		dstServerName = self.__getValueFromList("Destination server:", dstServers)
 		
-			dstServerName = self.__input()
-			
-			if dstServerName in dstServers:
-				break
-			else:
-				self.__logger.info("There is no destination server called {0}".format(dstServerName))
-				
 		return dstServers[dstServerName]
 		
 	def __getMappedObject(self):
 		self.__logger.info("*** How to select data from the server you have just chosen?")
-		self.__logger.info("Namespace:")
-		namespace = self.__input()
-		self.__logger.info("Name")
-		name = self.__input()
-		self.__logger.info("Index (instance no):")
-		index = self.__input()
-		self.__logger.info("Attribute:")
-		attribute = self.__input()
+		mappedObject = MappedObject(
+			*self.__getValues("Namespace:", "Name:", "Index (instance number):", "Attribute:")
+		)
 		
-		mappedObject = MappedObject(namespace, name, index, attribute)
 		return mappedObject
+	
+	def __getValue(self, message):
+		self.__logger.info(message)
+		
+		return self.__input()
+	
+	def __getValues(self, *messages):
+		values = []
+		
+		for message in messages:
+			values.append(self.__getValue(message))
+			
+		return values
+		
+	def __getValueFromList(self, message, values):
+		self.__logger.info(message)
+		
+		while True:
+			self.__logger.info("Select one of: [{0}]".format(", ".join(values)))
+			value = self.__input()
+		
+			if value in values:
+				return value
 	
 	def __getNonEmptyValue(self, message):
 		while True:
-			self.__logger.info(message)
-			value = self.__input()
+			value = self.__getValue(message)
 			
 			if value != "":
 				return value
@@ -276,6 +235,39 @@ class Generator(object):
 			etree.SubElement(srcServerNode, "uri").text = srcServer.getUri()
 			etree.SubElement(srcServerNode, "username").text = srcServer.getUsername()
 			etree.SubElement(srcServerNode, "password").text = srcServer.getPassword()
+			
+		dstServersNode = etree.SubElement(root, "dst-servers")
+		
+		for dstServer in self.__generatedSettings.getDstServers().values():
+			dstServerNode = etree.SubElement(dstServersNode, "dst-server")
+			etree.SubElement(dstServerNode, "name").text = dstServer.getName()
+			etree.SubElement(dstServerNode, "protocol").text = dstServer.getProtocol()
+			etree.SubElement(dstServerNode, "uri").text = dstServer.getUri()
+			etree.SubElement(dstServerNode, "username").text = dstServer.getUsername()
+			etree.SubElement(dstServerNode, "password").text = dstServer.getPassword()
+		
+		dataMappingsNode = etree.SubElement(root, "data-mappings")
+		
+		for dataMapping in self.__generatedSettings.getDataMappings():
+			dataMappingNode = etree.SubElement(dataMappingsNode, "data-mapping")
+			srcServerRef = etree.SubElement(dataMappingNode, "src-server")
+			etree.SubElement(srcServerRef, "name").text = dataMapping.getSrcServer().getName()
+			
+			mappedObjectNode = etree.SubElement(dataMappingNode, "mapped-object")
+			etree.SubElement(mappedObjectNode, "namespace").text = dataMapping.getMappedObject().getNamespace()
+			etree.SubElement(mappedObjectNode, "name").text = dataMapping.getMappedObject().getName()
+			etree.SubElement(mappedObjectNode, "index").text = dataMapping.getMappedObject().getIndex()
+			etree.SubElement(mappedObjectNode, "attribute").text = dataMapping.getMappedObject().getAttribute()
+		
+			dstServersMappingsNode = etree.SubElement(dataMappingNode, "dst-servers-mappings")
+			
+			for dstServerMapping in dataMapping.getDstServersMappings():
+				dstServerMappingNode = etree.SubElement(dstServersMappingsNode, "dst-server-mapping")
+				etree.SubElement(dstServerMappingNode, "name").text = dstServerMapping.getDstServer().getName()
+				etree.SubElement(dstServerMappingNode, "map-to").text = dstServerMapping.getMapTo()
+				etree.SubElement(dstServerMappingNode, "update-interval").text = str(int(dstServerMapping.getUpdateInterval().total_seconds()))
+		
+		etree.SubElement(root, "callbacks")
 		
 		etree.ElementTree(element=root).write(
 			self.__settings.getConfigurationFile(),

@@ -89,7 +89,7 @@
 	</xs:complexType>
 
 	<xs:complexType name="dataMappingsType">
-		<xs:sequence maxOccurs="unbounded">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="data-mapping" type="dataMappingType" />
 		</xs:sequence>
 	</xs:complexType>
@@ -116,7 +116,7 @@
 	</xs:complexType>
 
 	<xs:complexType name="callbacksType">
-		<xs:sequence maxOccurs="unbounded">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="callback" type="callbackType" />
 		</xs:sequence>
 	</xs:complexType>
