@@ -83,7 +83,7 @@ class Generator(object):
 		name = self.__getNonEmptyValue("New server name:")
 		
 		if name in self.__generatedSettings.getSrcServers():
-			self.__logger.info("Choose a new name, this one has been already used")
+			self.__logger.info("Choose a new name, this one has been already used.")
 		else:
 			protocols = self.__getExistingSrcProtocols()
 			protocol = self.__getValueFromList("Protocol:", protocols)
@@ -113,7 +113,7 @@ class Generator(object):
 		name = self.__getNonEmptyValue("New server name:")
 		
 		if name in self.__generatedSettings.getDstServers():
-			self.__logger.info("Choose a new name, this one has been already used")
+			self.__logger.info("Choose a new name, this one has been already used.")
 		else:
 			protocols = self.__getExistingDstProtocols()
 			protocol = self.__getValueFromList("Protocol:", protocols)
@@ -155,8 +155,18 @@ class Generator(object):
 		
 		while True:
 			dstServer = self.__getDestinationServer(dstServers)
-			mapTo = self.__getValue("Choose a property to which data should be bound")
-			updateInterval = self.__getValue("How often to refresh the measurement (in seconds)?")
+			mapTo = self.__getValue("Choose a property to which data should be bound.")
+			
+			while True:
+				try:
+					updateInterval = int(self.__getValue("How often to refresh the measurement (in seconds)?"))
+					
+					if updateInterval >= 0:
+						break
+				except ValueError:
+					pass
+				
+				self.__logger.info("Enter a non-negative integer value.")
 			
 			dstServerMapping = DstServerMapping(dstServer, mapTo, updateInterval)
 			dstServersMappings.append(dstServerMapping)
