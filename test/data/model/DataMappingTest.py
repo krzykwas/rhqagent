@@ -5,6 +5,8 @@
 #
 
 from data.model.DataMapping import DataMapping
+from data.model.MappedObject import MappedObject
+from data.model.SrcServer import SrcServer
 import unittest
 
 class DataMappingTest(unittest.TestCase):
@@ -36,3 +38,11 @@ class DataMappingTest(unittest.TestCase):
 		
 	def test_getDstServersMappings_ReturnsValuePassedInInitMethod(self):
 		self.assertEqual(self.__dstServersMappings, self.__sut.getDstServersMappings(), "Values are different")	
+
+	def test_str_ReturnsProperlyFormattedString(self):
+		srcServer = SrcServer("name", "protocol", "uri", "username", "password")
+		mappedObject = MappedObject("namespace", "index", "name", "attribute")
+		sut = DataMapping(srcServer=srcServer, mappedObject=mappedObject, dstServersMappings=[])
+		expected = "index.name.attribute@name"
+		actual = str(sut)
+		self.assertEqual(expected, actual, "Returned value {0} does not match the expected {1}".format(actual, expected))

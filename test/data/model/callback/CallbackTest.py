@@ -53,4 +53,4 @@ return 1
 		try:
 			sut([])
 		except Exception as e:
-			self.fail("Unexpected {0} raised unexpectedly".format(e))
+			self.fail("Exception {0} raised unexpectedly".format(e))

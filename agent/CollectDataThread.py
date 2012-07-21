@@ -29,14 +29,14 @@ class CollectDataThread(Thread):
 		
 		while True:
 			for dataMapping in dataMappings:
-				self.__handleDataMapping(dataMapping)
+				self.handleDataMapping(dataMapping)
 
 			for callback in callbacks:
-				self.__handleCallback(callback)
+				self.handleCallback(callback)
 				
 			time.sleep(1)
 			
-	def __handleDataMapping(self, dataMapping):
+	def handleDataMapping(self, dataMapping):
 		srcServer = dataMapping.getSrcServer()
 		mappedObject = dataMapping.getMappedObject()
 		dataProvider = self.__dataProviders[srcServer]
@@ -53,17 +53,14 @@ class CollectDataThread(Thread):
 					timestamp
 				)
 				
-				self.__logger.debug("Metric for {0}takes value {1}".format(
-					self.__dataSourceToStr(dataMapping),
-					value
-				))
+				self.__logger.debug("Metric for {0} takes value {1}".format(dataMapping, value))
 				
 				self.__pyAgent.getMetricsDataQueue().put(measurement)
 				dstServerMapping.setLastAccessedNow()
 				
 				self.__pastMeasurementsManager.put(srcServer, mappedObject, measurement)
 				
-	def __handleCallback(self, callback):
+	def handleCallback(self, callback):
 		timestamp = time.time()
 		
 		for dstServerMapping in callback.getDstServersMappings():
@@ -88,21 +85,11 @@ class CollectDataThread(Thread):
 					params.append(self.__pastMeasurementsManager.get(srcServer, mappedObject))
 					
 				result = callback(params)
-				
-				temp = ""
-				for param in callback.getParams():
-					temp += self.__dataSourceToStr(param)	
-				self.__logger.debug("Artificial metric for {0}takes value {1}".format(temp, result))
+
+				temp = ", ".join([str(param) for param in callback.getParams()])
+				self.__logger.debug("Artificial metric for {0} takes value {1}".format(temp, result))
 				
 				artificialMeasurement = Measurement(None, None, dstServerMapping, result, time.time())
 				
 				self.__pyAgent.getMetricsDataQueue().put(artificialMeasurement)
 				dstServerMapping.setLastAccessedNow()
-
-	def __dataSourceToStr(self, dataSource):
-		return "{0}.{1}.{2}@{3}, ".format(
-			dataSource.getMappedObject().getName(),
-			dataSource.getMappedObject().getIndex(),
-			dataSource.getMappedObject().getAttribute(),
-			dataSource.getSrcServer().getName()
-		)

@@ -18,3 +18,11 @@ class Param(object):
 	
 	def getMappedObject(self):
 		return self.__mappedObject
+	
+	def __str__(self):
+		return "{0}.{1}.{2}@{3}".format(
+			self.__mappedObject.getName(),
+			self.__mappedObject.getIndex(),
+			self.__mappedObject.getAttribute(),
+			self.__srcServer.getName()
+		)

@@ -29,7 +29,7 @@ class DataProviderFactory(object):
 			dataProvider = dataProviderClassObject(srcServer)
 
 			return dataProvider
-		except IOError:
+		except ImportError:
 			return None
 
 	def getDataProviderClassName(self, protocol):
@@ -48,5 +48,5 @@ class DataProviderFactory(object):
 					dataProviderNames.append(modname)
 				
 			return dataProviderNames
-		except IOError:
+		except ImportError:
 			return None

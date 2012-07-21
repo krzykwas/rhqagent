@@ -4,6 +4,8 @@
 # Gdańsk, 12-07-2012
 #
 
+from data.model.MappedObject import MappedObject
+from data.model.SrcServer import SrcServer
 from data.model.callback.Param import Param
 import unittest
 
@@ -27,3 +29,11 @@ class ParamTest(unittest.TestCase):
 		
 	def test_getMappedObject_ReturnsObjectPassedInInit(self):
 		self.assertIs(self.__mappedObject, self.__sut.getMappedObject())
+		
+	def test_str_ReturnsProperlyFormattedString(self):
+		srcServer = SrcServer("name", "protocol", "uri", "username", "password")
+		mappedObject = MappedObject("namespace", "index", "name", "attribute")
+		sut = Param(srcServer=srcServer, mappedObject=mappedObject)
+		expected = "index.name.attribute@name"
+		actual = str(sut)
+		self.assertEqual(expected, actual, "Returned value {0} does not match the expected {1}".format(actual, expected))

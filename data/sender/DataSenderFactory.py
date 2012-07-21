@@ -29,7 +29,7 @@ class DataSenderFactory(object):
 			dataSender = dataSenderClassObject(dstServer)
 
 			return dataSender
-		except IOError:
+		except ImportError:
 			return None
 
 	def getDataSenderClassName(self, protocol):
@@ -48,5 +48,5 @@ class DataSenderFactory(object):
 					dataSenderNames.append(modname)
 				
 			return dataSenderNames
-		except IOError:
+		except ImportError:
 			return None
