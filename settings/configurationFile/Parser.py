@@ -11,8 +11,7 @@ from data.model.MappedObject import MappedObject
 from data.model.SrcServer import SrcServer
 from data.model.callback.Callback import Callback
 from data.model.callback.Param import Param
-import lxml.etree
-import xml.etree.ElementTree
+import lxml.etree as etree
 
 class Parser(object):
 	"""
@@ -26,7 +25,7 @@ class Parser(object):
 		self.__schemaPath = schemaPath
 
 	def parse(self):
-		config = xml.etree.ElementTree.parse(self.__configurationFile)
+		config = etree.parse(self.__configurationFile)
 		self.__validateAgainstSchema()
 		
 		root = config.getroot()
@@ -37,9 +36,9 @@ class Parser(object):
 		self.__parseCallbacks(root.find("callbacks"))
 				
 	def __validateAgainstSchema(self):
-		schema_doc = lxml.etree.parse(self.__schemaPath)
-		schema = lxml.etree.XMLSchema(schema_doc)
-		xml = lxml.etree.parse(self.__configurationFile)
+		schema_doc = etree.parse(self.__schemaPath)
+		schema = etree.XMLSchema(schema_doc)
+		xml = etree.parse(self.__configurationFile)
 		
 		valid = schema.validate(xml)
 		

@@ -4,12 +4,16 @@
 # Gdańsk, 18-07-2012
 #
 
+from data.model.DataMapping import DataMapping
 from data.model.DstServer import DstServer
+from data.model.DstServerMapping import DstServerMapping
+from data.model.MappedObject import MappedObject
 from data.model.SrcServer import SrcServer
 from data.provider.DataProviderFactory import DataProviderFactory
 from data.sender.DataSenderFactory import DataSenderFactory
 from settings.Settings import Settings
 import logging
+import lxml.etree as etree
 
 class Generator(object):
 	"""
@@ -39,8 +43,10 @@ class Generator(object):
 	def generate(self):
 		self.__logger.info("========= Generating a configuration file for PyAgent =========")
 		self.__getSrcServers()
-		self.__getDstServers()
-		self.__getDataMappings()
+		#self.__getDstServers()
+		#self.__getDataMappings()
+		
+		self.__createConfigurationFile()
 		
 	def __getSrcServers(self):
 		self.__logger.info("*** Configuring source servers")
@@ -169,7 +175,80 @@ class Generator(object):
 			self.__tryAddNewDataMapping()
 			
 	def __tryAddNewDataMapping(self):
-		pass
+		srcServers = self.__generatedSettings.getSrcServers()
+		srcServer = self.__getSourceServer(srcServers)
+		
+		mappedObject = self.__getMappedObject()
+
+		self.__logger.info("*** Where to send the data provided by the source server?")
+		self.__logger.info("Define a new destination server mapping...")
+		dstServersMappings = []
+		dstServers = self.__generatedSettings.getDstServers()
+		
+		while True:
+			dstServer = self.__getDestinationServer(dstServers)
+			
+			self.__logger.info("Choose a property to which data should be bound")
+			mapTo = self.__input()
+			
+			self.__logger.info("How often to refresh the measurement (in seconds)?")
+			updateInterval = self.__input()
+			
+			dstServerMapping = DstServerMapping(dstServer, mapTo, updateInterval)
+			dstServersMappings.append(dstServerMapping)
+			
+			self.__logger.info("Define a new destination server mapping? [Y/n]")
+			response = self.__input()
+			
+			if response.lower() == "n":
+				break
+		
+		dataMapping = DataMapping(srcServer, mappedObject, dstServersMappings)
+		self.__generatedSettings.getDataMappings().append(dataMapping)
+	
+	def __getSourceServer(self, srcServers):
+		self.__logger.info("*** Where to take the data from?")
+		
+		while True:
+			self.__logger.info("Choose source server out of:")
+			self.__logger.info("[{0}]".format(", ".join(srcServers)))
+			
+			srcServerName = self.__input()
+		
+			if srcServerName in srcServers:
+				break
+			else:
+				self.__logger.info("There is no source server called {0}".format(srcServerName))
+				
+		return srcServers[srcServerName]
+	
+	def __getDestinationServer(self, dstServers):
+		while True:
+			self.__logger.info("Choose destination server out of:")
+			self.__logger.info("[{0}]".format(", ".join(dstServers)))
+		
+			dstServerName = self.__input()
+			
+			if dstServerName in dstServers:
+				break
+			else:
+				self.__logger.info("There is no destination server called {0}".format(dstServerName))
+				
+		return dstServers[dstServerName]
+		
+	def __getMappedObject(self):
+		self.__logger.info("*** How to select data from the server you have just chosen?")
+		self.__logger.info("Namespace:")
+		namespace = self.__input()
+		self.__logger.info("Name")
+		name = self.__input()
+		self.__logger.info("Index (instance no):")
+		index = self.__input()
+		self.__logger.info("Attribute:")
+		attribute = self.__input()
+		
+		mappedObject = MappedObject(namespace, name, index, attribute)
+		return mappedObject
 	
 	def __getNonEmptyValue(self, message):
 		while True:
@@ -185,3 +264,22 @@ class Generator(object):
 			self.__logger.info("\t{0}) {1}".format(i, element))
 			i += 1	
 		self.__logger.info("")
+		
+	def __createConfigurationFile(self):
+		root = etree.Element("settings")
+		srcServersNode = etree.SubElement(root, "src-servers")
+		
+		for srcServer in self.__generatedSettings.getSrcServers().values():
+			srcServerNode = etree.SubElement(srcServersNode, "src-server")
+			etree.SubElement(srcServerNode, "name").text = srcServer.getName()
+			etree.SubElement(srcServerNode, "protocol").text = srcServer.getProtocol()
+			etree.SubElement(srcServerNode, "uri").text = srcServer.getUri()
+			etree.SubElement(srcServerNode, "username").text = srcServer.getUsername()
+			etree.SubElement(srcServerNode, "password").text = srcServer.getPassword()
+		
+		etree.ElementTree(element=root).write(
+			self.__settings.getConfigurationFile(),
+			xml_declaration=True,
+			encoding="utf-8",
+			pretty_print=True
+		)

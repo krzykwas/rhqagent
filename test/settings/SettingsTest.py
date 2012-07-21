@@ -11,7 +11,11 @@ class SettingsTest(unittest.TestCase):
 
 	def setUp(self):
 		self.__sut = Settings()
-
+		
+	def test_getConfigurationFile_IsDefined(self):
+		objectFields = dir(self.__sut)		
+		self.assertIn("getConfigurationFile", objectFields, "Method getConfigurationFile not defined")
+		
 	def test_getCallbacks_IsDefined(self):
 		objectFields = dir(self.__sut)		
 		self.assertIn("getCallbacks", objectFields, "Method getCallbacks not defined")
@@ -43,6 +47,9 @@ class SettingsTest(unittest.TestCase):
 	def test_updateWithCommandLine_IsDefined(self):
 		objectFields = dir(self.__sut)
 		self.assertIn("updateWithCommandLine", objectFields, "Method updateWithCommandLine not defined")
+		
+	def test_getConfigurationFile_InvokedOnNewObject_ReturnsEmptyString(self):
+		self.assertEqual("", self.__sut.getConfigurationFile(), "Non-empty string returned")
 				
 	def test_getCallbacks_InvokedOnNewObject_ReturnsEmptyList(self):
 		self.assertEqual([], self.__sut.getCallbacks(), "Non-empty list returned")

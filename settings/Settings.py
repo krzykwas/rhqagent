@@ -26,6 +26,9 @@ class Settings(object):
 		
 		self.__schemaPath = "settings/settings.xsd"
 
+	def getConfigurationFile(self):
+		return self.__configurationFile
+
 	def getCallbacks(self):
 		return self.__callbacks
 
