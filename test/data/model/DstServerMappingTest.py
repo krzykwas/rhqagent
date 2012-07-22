@@ -5,7 +5,6 @@
 #
 
 from data.model.DstServerMapping import DstServerMapping
-from datetime import timedelta
 import unittest
 
 class DstServerMappingTest(unittest.TestCase):
@@ -30,23 +29,24 @@ class DstServerMappingTest(unittest.TestCase):
 		self.assertIn("getUpdateInterval", objectFields, "Method getUpdateInterval not defined")
 				
 	def test_getDstServer_InvokedOnNewObject_ReturnsCorrectValue(self):
-		self.assertEqual(self.__dstServer, self.__sut.getDstServer(), "Incorrect value returned")
+		self.assertEqual(self.__dstServer, self.__sut.getDstServer(), "{0} expected, instead {1} returned".format(self.__dstServer, self.__sut.getDstServer()))
 		
 	def test_getMapTo_InvokedOnNewObject_ReturnsCorrectValue(self):
-		self.assertEqual(self.__mapTo, self.__sut.getMapTo(), "Incorrect value returned")
+		self.assertEqual(self.__mapTo, self.__sut.getMapTo(), "{0} expected, instead {1} returned".format(self.__mapTo, self.__sut.getMapTo()))
 		
 	def test_getUpdateInterval_InvokedOnNewObject_ReturnsCorrectValue(self):
-		expected = timedelta(seconds=self.__updateInterval)
-		self.assertEqual(expected, self.__sut.getUpdateInterval(), "Incorrect value returned")
+		expected = self.__updateInterval
+		actual = self.__sut.getUpdateInterval()
+		self.assertEqual(expected, actual, "{0} expected, instead {1} returned".format(expected, actual))
 
 	def test_isDue_OnNewlyCreatedInstance_WithZeroUpdateInterval_ReturnsTrue(self):
 		newInstance = DstServerMapping(None, None, 0)
 		self.assertTrue(newInstance.isDue())
 		
 	def test_setLastAccessNow_ChangesDueStateToFalse(self):
-		newInstance = DstServerMapping(None, None, 1000)
-		newInstance.setLastAccessedNow()
-		self.assertFalse(newInstance.isDue())
+		sut = DstServerMapping(None, None, 1000)
+		sut.setLastAccessedNow()
+		self.assertFalse(sut.isDue())
 		
 	def test_init_WithNonEmptyStringAsUpdateInterval_RaisesValueError(self):
 		self.assertRaises(ValueError, lambda: DstServerMapping(object(), "mapTo", "a-string"))
@@ -60,17 +60,14 @@ class DstServerMappingTest(unittest.TestCase):
 	def test_setUpdateInterval_WithNone_RaisesTypeError(self):
 		self.assertRaises(TypeError, lambda: self.__sut.setUpdateInterval(None))
 		
-	def test_setUpdateInterval_WithTimedelta_ProperlyAssignsValue(self):
-		expected = timedelta(3)
-		self.__sut.setUpdateInterval(expected)
-		self.assertEqual(expected, self.__sut.getUpdateInterval(), "Incorrect value returned")
-		
 	def test_setUpdateInterval_WithInt_ProperlyAssignsValue(self):
-		expected = 5
-		self.__sut.setUpdateInterval(timedelta(seconds=expected))
-		self.assertEqual(expected, self.__sut.getUpdateInterval().total_seconds(), "Incorrect value returned")
+		expected = 123
+		self.__sut.setUpdateInterval(expected)
+		actual = self.__sut.getUpdateInterval()
+		self.assertEqual(expected, actual, "{0} expected, instead {1} returned".format(expected, actual))
 		
 	def test_setUpdateInterval_ProperlyChangesInternalObjectState(self):
-		updateInterval = 6
-		self.__sut.setUpdateInterval(updateInterval)
-		self.assertEqual(timedelta(seconds=updateInterval), self.__sut.getUpdateInterval(), "Incorrect value returned by getUpdateInterval")
+		expected = 234
+		self.__sut.setUpdateInterval(expected)
+		actual = self.__sut.getUpdateInterval()
+		self.assertEqual(expected, actual, "{0} expected, instead {1} returned".format(expected, actual))

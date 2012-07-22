@@ -156,18 +156,8 @@ class Generator(object):
 		while True:
 			dstServer = self.__getDestinationServer(dstServers)
 			mapTo = self.__getValue("Choose a property to which data should be bound.")
-			
-			while True:
-				try:
-					updateInterval = int(self.__getValue("How often to refresh the measurement (in seconds)?"))
-					
-					if updateInterval >= 0:
-						break
-				except ValueError:
-					pass
-				
-				self.__logger.info("Enter a non-negative integer value.")
-			
+			updateInterval = self.__getNonNegativeIntegerValue("How often to refresh the measurement (in seconds)?")
+						
 			dstServerMapping = DstServerMapping(dstServer, mapTo, updateInterval)
 			dstServersMappings.append(dstServerMapping)
 			
@@ -191,9 +181,11 @@ class Generator(object):
 		
 	def __getMappedObject(self):
 		self.__logger.info("*** How to select data from the server you have just chosen?")
-		mappedObject = MappedObject(
-			*self.__getValues("Namespace:", "Name:", "Index (instance number):", "Attribute:")
-		)
+		namespace, name = self.__getValues("Namespace:", "Name:")
+		index = self.__getNonNegativeIntegerValue("Index (instance number):")
+		attribute = self.__getValue("Attribute:")
+		
+		mappedObject = MappedObject(namespace, name, index, attribute)
 		
 		return mappedObject
 	
@@ -226,6 +218,18 @@ class Generator(object):
 			
 			if value != "":
 				return value
+			
+	def __getNonNegativeIntegerValue(self, message):
+		while True:
+			try:
+				value = int(self.__getValue(message))
+					
+				if value >= 0:
+					return value
+			except ValueError:
+				pass
+				
+			self.__logger.info("Enter a non-negative integer value.")
 			
 	def __printList(self, elements):
 		i = 1
@@ -266,7 +270,7 @@ class Generator(object):
 			mappedObjectNode = etree.SubElement(dataMappingNode, "mapped-object")
 			etree.SubElement(mappedObjectNode, "namespace").text = dataMapping.getMappedObject().getNamespace()
 			etree.SubElement(mappedObjectNode, "name").text = dataMapping.getMappedObject().getName()
-			etree.SubElement(mappedObjectNode, "index").text = dataMapping.getMappedObject().getIndex()
+			etree.SubElement(mappedObjectNode, "index").text = str(dataMapping.getMappedObject().getIndex())
 			etree.SubElement(mappedObjectNode, "attribute").text = dataMapping.getMappedObject().getAttribute()
 		
 			dstServersMappingsNode = etree.SubElement(dataMappingNode, "dst-servers-mappings")
@@ -275,7 +279,7 @@ class Generator(object):
 				dstServerMappingNode = etree.SubElement(dstServersMappingsNode, "dst-server-mapping")
 				etree.SubElement(dstServerMappingNode, "name").text = dstServerMapping.getDstServer().getName()
 				etree.SubElement(dstServerMappingNode, "map-to").text = dstServerMapping.getMapTo()
-				etree.SubElement(dstServerMappingNode, "update-interval").text = str(int(dstServerMapping.getUpdateInterval().total_seconds()))
+				etree.SubElement(dstServerMappingNode, "update-interval").text = str(dstServerMapping.getUpdateInterval())
 		
 		etree.SubElement(root, "callbacks")
 		

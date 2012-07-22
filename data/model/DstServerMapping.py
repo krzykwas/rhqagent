@@ -4,8 +4,7 @@
 # Gdańsk, 09-06-2012
 #
 
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 class DstServerMapping(object):
 	
@@ -20,7 +19,6 @@ class DstServerMapping(object):
 		self.__dstServer = dstServer
 		self.__mapTo = mapTo
 		self.__lastAccessed = datetime.min;
-		
 		self.setUpdateInterval(updateInterval)
 		
 	def getDstServer(self):
@@ -33,13 +31,10 @@ class DstServerMapping(object):
 		return self.__updateInterval
 	
 	def setUpdateInterval(self, updateInterval):
-		if isinstance(updateInterval, timedelta):
-			self.__updateInterval = updateInterval
-		else:
-			self.__updateInterval = timedelta(seconds=int(updateInterval))
+		self.__updateInterval = int(updateInterval)
 	
 	def isDue(self):
-		return (self.__lastAccessed + self.__updateInterval) < datetime.now()
+		return (self.__lastAccessed + timedelta(seconds=self.__updateInterval)) < datetime.now()
 	
 	def setLastAccessedNow(self):
 		self.__lastAccessed = datetime.now()
