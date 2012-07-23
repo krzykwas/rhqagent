@@ -49,16 +49,16 @@ class DstServerMappingTest(unittest.TestCase):
 		self.assertFalse(sut.isDue())
 		
 	def test_init_WithNonEmptyStringAsUpdateInterval_RaisesValueError(self):
-		self.assertRaises(ValueError, lambda: DstServerMapping(object(), "mapTo", "a-string"))
+		self.assertRaises(ValueError, DstServerMapping, object(), "mapTo", "a-string")
 		
 	def test_init_WithNoneAsUpdateInterval_RaisesTypeError(self):
-		self.assertRaises(TypeError, lambda: DstServerMapping(object(), "mapTo", None))
+		self.assertRaises(TypeError, DstServerMapping, object(), "mapTo", None)
 		
 	def test_setUpdateInterval_WithNonEmptyString_RaisesValueError(self):
-		self.assertRaises(ValueError, lambda: self.__sut.setUpdateInterval("a-string"))
+		self.assertRaises(ValueError, self.__sut.setUpdateInterval, "a-string")
 		
 	def test_setUpdateInterval_WithNone_RaisesTypeError(self):
-		self.assertRaises(TypeError, lambda: self.__sut.setUpdateInterval(None))
+		self.assertRaises(TypeError, self.__sut.setUpdateInterval, None)
 		
 	def test_setUpdateInterval_WithInt_ProperlyAssignsValue(self):
 		expected = 123

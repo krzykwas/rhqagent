@@ -4,8 +4,7 @@
 # Gdańsk, 24-05-2012
 #
 
-from abc import ABCMeta
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 
 class AbstractDataProvider(object):
 	__metaclass__ = ABCMeta

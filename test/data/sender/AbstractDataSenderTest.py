@@ -3,14 +3,14 @@
 from data.sender.AbstractDataSender import AbstractDataSender
 import unittest
 
-class AbstractDataProviderTest(unittest.TestCase):
+class AbstractDataSenderTest(unittest.TestCase):
 
 	def test_WhenInitMethodInvoked_TypeErrorIsThrown(self):
 		"""
 		Checks whether AbstractDataSender is abstract, i.e. cannot be directly 
 		instatiated.
 		"""
-		self.assertRaises(TypeError, lambda classObject: classObject(), AbstractDataSender)
+		self.assertRaises(TypeError, AbstractDataSender, object())
 
 	def test_getDstServer_IsDefined(self):		
 		self.assertIn("getDstServer", dir(AbstractDataSender), "Method getDstServer not defined")

@@ -10,7 +10,7 @@ class AbstractDataProviderTest(unittest.TestCase):
 		Checks whether AbstractDataProvider is abstract, i.e. cannot be directly 
 		instatiated.
 		"""
-		self.assertRaises(TypeError, lambda classObject: classObject(), AbstractDataProvider)
+		self.assertRaises(TypeError, AbstractDataProvider, object())
 
 	def test_getSrcServer_IsDefined(self):		
 		self.assertIn("getSrcServer", dir(AbstractDataProvider), "Method getSrcServer not defined")
