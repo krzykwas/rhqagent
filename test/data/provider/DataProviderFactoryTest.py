@@ -6,6 +6,7 @@
 
 from data.model.SrcServer import SrcServer
 from data.provider.DataProviderFactory import DataProviderFactory
+from exception.ProtocolFormatException import ProtocolFormatException
 import unittest
 
 class DataProviderFactoryTest(unittest.TestCase):
@@ -25,8 +26,8 @@ class DataProviderFactoryTest(unittest.TestCase):
 		formattedClassName = self.__sut.getDataProviderClassName("abc")
 		self.assertEqual("ABCDataProvider", formattedClassName, "Class's name {0} is invalid".format(formattedClassName))
 
-	def test_getDataProviderClassName_InvokedWithIncorrectProtocolName_RaisesValueError(self):
-		self.assertRaises(ValueError, self.__sut.getDataProviderClassName, "invalid-name")
+	def test_getDataProviderClassName_InvokedWithIncorrectProtocolName_RaisesProtocolFormatException(self):
+		self.assertRaises(ProtocolFormatException, self.__sut.getDataProviderClassName, "invalid-name")
 		
 	def test_getDataProvider_InvokedWithAnSrcServerWithInvalidProtocol_ReturnsNone(self):
 		srcServer = SrcServer("name", "protocolthatdoesnotexist", "uri", "username", "password")

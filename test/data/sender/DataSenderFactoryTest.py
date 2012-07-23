@@ -6,6 +6,7 @@
 
 from data.model.DstServer import DstServer
 from data.sender.DataSenderFactory import DataSenderFactory
+from exception.ProtocolFormatException import ProtocolFormatException
 import unittest
 
 class DataSenderFactoryTest(unittest.TestCase):
@@ -25,8 +26,8 @@ class DataSenderFactoryTest(unittest.TestCase):
 		formattedClassName = self.__sut.getDataSenderClassName("abc")
 		self.assertEqual("ABCDataSender", formattedClassName, "Class's name {0} is invalid".format(formattedClassName))
 
-	def test_getDataSenderClassName_InvokedWithIncorrectProtocolName_RaisesValueError(self):
-		self.assertRaises(ValueError, self.__sut.getDataSenderClassName, "invalid-name")
+	def test_getDataSenderClassName_InvokedWithIncorrectProtocolName_RaisesProtocolFormatException(self):
+		self.assertRaises(ProtocolFormatException, self.__sut.getDataSenderClassName, "invalid-name")
 		
 	def test_getDataSender_InvokedWithADstServerWithInvalidProtocol_ReturnsNone(self):
 		dstServer = DstServer("name", "protocolthatdoesnotexist", "uri", "username", "password")

@@ -4,6 +4,7 @@
 # Gdańsk, 24-05-2012
 #
 
+from exception.ProtocolFormatException import ProtocolFormatException
 import importlib
 import pkgutil
 
@@ -34,7 +35,7 @@ class DataProviderFactory(object):
 
 	def getDataProviderClassName(self, protocol):
 		if False in [char.isalpha() for char in protocol]:
-			raise ValueError("Invalid protocol name - only letters allowed")
+			raise ProtocolFormatException("Invalid protocol name - only letters allowed")
 		
 		return protocol.upper() + "DataProvider"
 	

@@ -11,6 +11,7 @@ from data.model.MappedObject import MappedObject
 from data.model.SrcServer import SrcServer
 from data.model.callback.Callback import Callback
 from data.model.callback.Param import Param
+from exception.ConfigurationException import ConfigurationException
 import lxml.etree as etree
 
 class Parser(object):
@@ -43,7 +44,7 @@ class Parser(object):
 		valid = schema.validate(xml)
 		
 		if not valid:
-			raise ValueError("Configuration file invalid", schema.error_log)
+			raise ConfigurationException("Configuration file invalid", schema.error_log)
 	
 	def __parseSrcServers(self, node):
 		for serverNode in node.findall("src-server"):
@@ -74,7 +75,7 @@ class Parser(object):
 			try:
 				srcServer = self.__settings.getSrcServers()[srcServerName]
 			except KeyError:
-				raise ValueError("Unknown source server {0} in data-mapping.".format(srcServerName))
+				raise ConfigurationException("Unknown source server {0} in data-mapping.".format(srcServerName))
 
 			mappedObject = self.__parseMappedObject(dataMappingNode.find("mapped-object"))
 			dstServersMappings = self.__parseDstServersMappings(dataMappingNode.find("dst-servers-mappings"))
@@ -101,7 +102,7 @@ class Parser(object):
 			try:
 				dstServer = self.__settings.getDstServers()[name]
 			except KeyError:
-				raise ValueError("Unknown destination server {0} in data-mapping.".format(name))
+				raise ConfigurationException("Unknown destination server {0} in data-mapping.".format(name))
 			
 			dstServerMapping = DstServerMapping(dstServer, mapTo, updateInterval)
 			dstServersMappings.append(dstServerMapping)
@@ -126,7 +127,7 @@ class Parser(object):
 			try:
 				srcServer = self.__settings.getSrcServers()[srcServerName]
 			except KeyError:
-				raise ValueError("Unknown source server {0} in data-mapping.".format(srcServerName))
+				raise ConfigurationException("Unknown source server {0} in data-mapping.".format(srcServerName))
 
 			mappedObject = self.__parseMappedObject(paramNode.find("mapped-object"))
 			

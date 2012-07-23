@@ -102,7 +102,7 @@ class RHQDataSender(AbstractDataSender):
 			if schedule["scheduleName"] == scheduleName:
 				return schedule
 			
-		raise ValueError("No schedule named {0} found".format(scheduleName))
+		raise KeyError("No schedule named {0} found".format(scheduleName))
 	
 	def __getSchedules(self):
 		uri = "resource/{0}/schedules".format(self.__platformId)
