@@ -45,7 +45,11 @@ class DataSenderFactoryTest(unittest.TestCase):
 	def test_getDataSender_InvokedWithADstServerWithInvalidProtocol_ReturnsNone(self):
 		dstServer = DstServer("name", "protocolthatdoesnotexist", "uri", "username", "password")
 		self.assertIs(None, self.__sut.getDataSender(dstServer))
-		
+
+	def test_getDataProvider_InvokedWithADstServerWithRHQProtocol_DoesNotReturnNone(self):
+		dstServer = DstServer("name", "rhq", "uri", "username", "password")
+		self.assertIsNotNone(self.__sut.getDataSender(dstServer), "None returned instead of an RHQDataSender instance.")
+
 	def test_getDataSender_CanCreateAllExistingDataSenders(self):
 		try:
 			for dataSenderName in self.__sut.getDataSenderNames():
@@ -61,6 +65,3 @@ class DataSenderFactoryTest(unittest.TestCase):
 		except Exception as e:
 			self.fail("Exception {0} raised unexpectedly".format(e))
 			
-	def test_getDataProvider_InvokedWithWBEM_DoesNotReturnNone(self):
-		dstServer = DstServer("name", "rhq", "uri", "username", "password")
-		self.assertIsNotNone(self.__sut.getDataSender(dstServer), "None returned instead of an RHQDataSender instance.")

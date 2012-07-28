@@ -53,14 +53,11 @@ class DataSenderFactory(object):
 		return protocol.upper() + "DataSender"
 	
 	def getDataSenderNames(self):
-		try:
-			dataSenderNames = []
+		dataSenderNames = []
+		
+		module = importlib.import_module(".implementation", "pyagent.data.sender")
+		for importer, modname, ispkg in pkgutil.iter_modules(module.__path__):
+			if modname.endswith("DataSender"):
+				dataSenderNames.append(modname)
 			
-			module = importlib.import_module(".implementation", "pyagent.data.sender")
-			for importer, modname, ispkg in pkgutil.iter_modules(module.__path__):
-				if modname.endswith("DataSender"):
-					dataSenderNames.append(modname)
-				
-			return dataSenderNames
-		except ImportError:
-			return None
+		return dataSenderNames

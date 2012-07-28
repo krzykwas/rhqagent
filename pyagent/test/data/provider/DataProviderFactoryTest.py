@@ -45,6 +45,10 @@ class DataProviderFactoryTest(unittest.TestCase):
 	def test_getDataProvider_InvokedWithAnSrcServerWithInvalidProtocol_ReturnsNone(self):
 		srcServer = SrcServer("name", "protocolthatdoesnotexist", "uri", "username", "password")
 		self.assertIs(None, self.__sut.getDataProvider(srcServer))
+	
+	def test_getDataProvider_InvokedWithAnSrcServerWithWBEMProtocol_DoesNotReturnNone(self):
+		srcServer = SrcServer("name", "wbem", "uri", "username", "password")
+		self.assertIsNotNone(self.__sut.getDataProvider(srcServer), "None returned instead of a WBEMDataProvider instance.")
 		
 	def test_getDataProvider_CanCreateAllExistingDataProviders(self):
 		try:
@@ -60,7 +64,3 @@ class DataProviderFactoryTest(unittest.TestCase):
 			self.__sut.getDataProviderNames()
 		except Exception as e:
 			self.fail("Exception {0} raised unexpectedly".format(e))
-			
-	def test_getDataProvider_InvokedWithWBEM_DoesNotReturnNone(self):
-		srcServer = SrcServer("name", "wbem", "uri", "username", "password")
-		self.assertIsNotNone(self.__sut.getDataProvider(srcServer), "None returned instead of a WBEMDataProvider instance.")

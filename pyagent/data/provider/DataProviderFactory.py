@@ -53,14 +53,11 @@ class DataProviderFactory(object):
 		return protocol.upper() + "DataProvider"
 	
 	def getDataProviderNames(self):
-		try:
-			dataProviderNames = []
+		dataProviderNames = []
+		
+		module = importlib.import_module(".implementation", "pyagent.data.provider")
+		for importer, modname, ispkg in pkgutil.iter_modules(module.__path__):
+			if modname.endswith("DataProvider"):
+				dataProviderNames.append(modname)
 			
-			module = importlib.import_module(".implementation", "pyagent.data.provider")
-			for importer, modname, ispkg in pkgutil.iter_modules(module.__path__):
-				if modname.endswith("DataProvider"):
-					dataProviderNames.append(modname)
-				
-			return dataProviderNames
-		except ImportError:
-			return None
+		return dataProviderNames
