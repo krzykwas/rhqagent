@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from settings.Settings import Settings
+from ...settings.Settings import Settings
 import unittest
 
 class SettingsTest(unittest.TestCase):

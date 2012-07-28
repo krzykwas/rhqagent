@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.callback.Callback import Callback
+from .....data.model.callback.Callback import Callback
 import unittest
 
 class CallbackTest(unittest.TestCase):

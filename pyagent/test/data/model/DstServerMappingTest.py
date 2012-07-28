@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.DstServerMapping import DstServerMapping
+from ....data.model.DstServerMapping import DstServerMapping
 import unittest
 
 class DstServerMappingTest(unittest.TestCase):

@@ -17,9 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.SrcServer import SrcServer
-from data.provider.DataProviderFactory import DataProviderFactory
-from exception.ProtocolFormatException import ProtocolFormatException
+from ....data.model.SrcServer import SrcServer
+from ....data.provider.DataProviderFactory import DataProviderFactory
+from ....exception.ProtocolFormatException import ProtocolFormatException
 import unittest
 
 class DataProviderFactoryTest(unittest.TestCase):
@@ -60,3 +60,7 @@ class DataProviderFactoryTest(unittest.TestCase):
 			self.__sut.getDataProviderNames()
 		except Exception as e:
 			self.fail("Exception {0} raised unexpectedly".format(e))
+			
+	def test_getDataProvider_InvokedWithWBEM_DoesNotReturnNone(self):
+		srcServer = SrcServer("name", "wbem", "uri", "username", "password")
+		self.assertIsNotNone(self.__sut.getDataProvider(srcServer), "None returned instead of a WBEMDataProvider instance.")

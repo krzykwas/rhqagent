@@ -17,11 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from agent.CollectDataThread import CollectDataThread
-from agent.SendDataThread import SendDataThread
-from data.model.PastMeasurementsManager import PastMeasurementsManager
-from data.provider.DataProviderFactory import DataProviderFactory
-from data.sender.DataSenderFactory import DataSenderFactory
+from .CollectDataThread import CollectDataThread
+from .SendDataThread import SendDataThread
+from ..data.model.PastMeasurementsManager import PastMeasurementsManager
+from ..data.provider.DataProviderFactory import DataProviderFactory
+from ..data.sender.DataSenderFactory import DataSenderFactory
 import logging
 import sys
 import time

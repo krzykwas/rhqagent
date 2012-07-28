@@ -17,8 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from agent.PyAgent import PyAgent
-from settings.Settings import Settings
+from ...agent.PyAgent import PyAgent
+from ...settings.Settings import Settings
 import unittest
 
 class PyAgentTest(unittest.TestCase):

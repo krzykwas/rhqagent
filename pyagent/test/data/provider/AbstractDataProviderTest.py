@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.provider.AbstractDataProvider import AbstractDataProvider
+from ....data.provider.AbstractDataProvider import AbstractDataProvider
 import unittest
 
 class AbstractDataProviderTest(unittest.TestCase):

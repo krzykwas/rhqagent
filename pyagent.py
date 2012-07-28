@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #-*- coding: utf-8 -*-
 #
 # Krzysztof „krzykwas” Kwaśniewski
@@ -17,9 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from agent.PyAgent import PyAgent
-from settings.Settings import Settings
-from settings.configurationFile.Generator import Generator
+from pyagent.agent.PyAgent import PyAgent
+from pyagent.settings.Settings import Settings
+from pyagent.settings.configurationFile.Generator import Generator
 import logging
 
 def getSettings():

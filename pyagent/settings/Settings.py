@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from settings.configurationFile.Parser import Parser
+from .configurationFile.Parser import Parser
 import argparse
 import logging
 
@@ -37,7 +37,7 @@ class Settings(object):
 		self.__debugLevel = None		#The higher value, the more info printed
 		self.__setup = False			#Generate a configuration file?
 		
-		self.__schemaPath = "settings/settings.xsd"
+		self.__schemaPath = "pyagent/settings/settings.xsd"
 
 	def getConfigurationFile(self):
 		return self.__configurationFile

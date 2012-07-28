@@ -17,14 +17,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.DataMapping import DataMapping
-from data.model.DstServer import DstServer
-from data.model.DstServerMapping import DstServerMapping
-from data.model.MappedObject import MappedObject
-from data.model.SrcServer import SrcServer
-from data.model.callback.Callback import Callback
-from data.model.callback.Param import Param
-from exception.ConfigurationException import ConfigurationException
+from ...data.model.DataMapping import DataMapping
+from ...data.model.DstServer import DstServer
+from ...data.model.DstServerMapping import DstServerMapping
+from ...data.model.MappedObject import MappedObject
+from ...data.model.SrcServer import SrcServer
+from ...data.model.callback.Callback import Callback
+from ...data.model.callback.Param import Param
+from ...exception.ConfigurationException import ConfigurationException
 import lxml.etree as etree
 
 class Parser(object):

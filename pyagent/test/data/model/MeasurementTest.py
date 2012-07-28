@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.Measurement import Measurement
+from ....data.model.Measurement import Measurement
 import unittest
 
 class MeasurementTest(unittest.TestCase):

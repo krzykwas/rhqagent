@@ -17,8 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.Measurement import Measurement
-from data.model.PastMeasurementsManager import PastMeasurementsManager
+from ....data.model.Measurement import Measurement
+from ....data.model.PastMeasurementsManager import PastMeasurementsManager
 import unittest
 
 class PastMeasurementsManagerTest(unittest.TestCase):

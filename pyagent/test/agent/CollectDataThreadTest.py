@@ -17,11 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from agent.CollectDataThread import CollectDataThread
-from agent.PyAgent import PyAgent
-from data.model.DataMapping import DataMapping
-from data.model.callback.Param import Param
-from settings.Settings import Settings
+from ...agent.CollectDataThread import CollectDataThread
+from ...agent.PyAgent import PyAgent
+from ...data.model.DataMapping import DataMapping
+from ...data.model.callback.Param import Param
+from ...settings.Settings import Settings
 import unittest
 
 class CollectDataThreadTest(unittest.TestCase):

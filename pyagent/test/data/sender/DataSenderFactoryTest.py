@@ -17,9 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.DstServer import DstServer
-from data.sender.DataSenderFactory import DataSenderFactory
-from exception.ProtocolFormatException import ProtocolFormatException
+from ....data.model.DstServer import DstServer
+from ....data.sender.DataSenderFactory import DataSenderFactory
+from ....exception.ProtocolFormatException import ProtocolFormatException
 import unittest
 
 class DataSenderFactoryTest(unittest.TestCase):
@@ -60,3 +60,7 @@ class DataSenderFactoryTest(unittest.TestCase):
 			self.__sut.getDataSenderNames()
 		except Exception as e:
 			self.fail("Exception {0} raised unexpectedly".format(e))
+			
+	def test_getDataProvider_InvokedWithWBEM_DoesNotReturnNone(self):
+		dstServer = DstServer("name", "rhq", "uri", "username", "password")
+		self.assertIsNotNone(self.__sut.getDataSender(dstServer), "None returned instead of an RHQDataSender instance.")

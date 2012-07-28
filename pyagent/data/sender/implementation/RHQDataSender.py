@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.sender.AbstractDataSender import AbstractDataSender
+from ..AbstractDataSender import AbstractDataSender
 import json
 import logging
 import platform

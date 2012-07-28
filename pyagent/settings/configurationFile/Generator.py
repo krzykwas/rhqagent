@@ -17,14 +17,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.DataMapping import DataMapping
-from data.model.DstServer import DstServer
-from data.model.DstServerMapping import DstServerMapping
-from data.model.MappedObject import MappedObject
-from data.model.SrcServer import SrcServer
-from data.provider.DataProviderFactory import DataProviderFactory
-from data.sender.DataSenderFactory import DataSenderFactory
-from settings.Settings import Settings
+from ...data.model.DataMapping import DataMapping
+from ...data.model.DstServer import DstServer
+from ...data.model.DstServerMapping import DstServerMapping
+from ...data.model.MappedObject import MappedObject
+from ...data.model.SrcServer import SrcServer
+from ...data.provider.DataProviderFactory import DataProviderFactory
+from ...data.sender.DataSenderFactory import DataSenderFactory
+from ..Settings import Settings
 import logging
 import lxml.etree as etree
 

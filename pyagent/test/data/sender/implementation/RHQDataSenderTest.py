@@ -17,8 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.DstServer import DstServer
-from data.sender.implementation.RHQDataSender import RHQDataSender
+from .....data.model.DstServer import DstServer
+from .....data.sender.implementation.RHQDataSender import RHQDataSender
 import unittest
 
 class RHQDataSenderTest(unittest.TestCase):

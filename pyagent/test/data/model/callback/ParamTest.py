@@ -17,9 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.MappedObject import MappedObject
-from data.model.SrcServer import SrcServer
-from data.model.callback.Param import Param
+from .....data.model.MappedObject import MappedObject
+from .....data.model.SrcServer import SrcServer
+from .....data.model.callback.Param import Param
 import unittest
 
 class ParamTest(unittest.TestCase):

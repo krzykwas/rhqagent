@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from exception.ProtocolFormatException import ProtocolFormatException
+from ...exception.ProtocolFormatException import ProtocolFormatException
 import importlib
 import pkgutil
 
@@ -37,7 +37,7 @@ class DataSenderFactory(object):
 		try:
 			name = self.getDataSenderClassName(dstServer.getProtocol())
 
-			module = importlib.import_module(".implementation." + name, "data.sender")
+			module = importlib.import_module(".implementation." + name, "pyagent.data.sender")
 			dataSenderClassObject = getattr(module, name)
 
 			dataSender = dataSenderClassObject(dstServer)
@@ -56,7 +56,7 @@ class DataSenderFactory(object):
 		try:
 			dataSenderNames = []
 			
-			module = importlib.import_module(".implementation", "data.sender")
+			module = importlib.import_module(".implementation", "pyagent.data.sender")
 			for importer, modname, ispkg in pkgutil.iter_modules(module.__path__):
 				if modname.endswith("DataSender"):
 					dataSenderNames.append(modname)

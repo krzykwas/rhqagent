@@ -1,7 +1,8 @@
+#!/usr/bin/python
 #-*- coding: utf-8 -*-
 #
 # Krzysztof „krzykwas” Kwaśniewski
-# Gdańsk, 23-07-2012
+# Gdańsk, 28-07-2012
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,8 +17,3 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
-from .PyAgentException import PyAgentException
-
-class ProtocolFormatException(PyAgentException):
-	pass

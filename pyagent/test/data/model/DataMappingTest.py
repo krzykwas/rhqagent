@@ -17,9 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.model.DataMapping import DataMapping
-from data.model.MappedObject import MappedObject
-from data.model.SrcServer import SrcServer
+from ....data.model.DataMapping import DataMapping
+from ....data.model.MappedObject import MappedObject
+from ....data.model.SrcServer import SrcServer
 import unittest
 
 class DataMappingTest(unittest.TestCase):

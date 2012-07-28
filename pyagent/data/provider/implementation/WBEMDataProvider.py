@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from data.provider.AbstractDataProvider import AbstractDataProvider
+from ..AbstractDataProvider import AbstractDataProvider
 from pywbem.cim_http import AuthError
 from pywbem.cim_operations import CIMError
 import logging

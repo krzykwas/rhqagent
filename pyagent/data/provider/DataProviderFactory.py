@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from exception.ProtocolFormatException import ProtocolFormatException
+from ...exception.ProtocolFormatException import ProtocolFormatException
 import importlib
 import pkgutil
 
@@ -37,7 +37,7 @@ class DataProviderFactory(object):
 		try:
 			name = self.getDataProviderClassName(srcServer.getProtocol())
 
-			module = importlib.import_module(".implementation." + name, "data.provider")
+			module = importlib.import_module(".implementation." + name, "pyagent.data.provider")
 			dataProviderClassObject = getattr(module, name)
 
 			dataProvider = dataProviderClassObject(srcServer)
@@ -56,7 +56,7 @@ class DataProviderFactory(object):
 		try:
 			dataProviderNames = []
 			
-			module = importlib.import_module(".implementation", "data.provider")
+			module = importlib.import_module(".implementation", "pyagent.data.provider")
 			for importer, modname, ispkg in pkgutil.iter_modules(module.__path__):
 				if modname.endswith("DataProvider"):
 					dataProviderNames.append(modname)
