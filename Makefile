@@ -1,3 +1,17 @@
+.PHONY : test
+.PHONY : coverage
+.PHONY : packages
+.PHONY : pypi
+.PHONY : rpm
+.PHONY : deb
+.PHONY : clean
+
+test:
+	find pyagent/test -name '*[^_].py' -print0 | xargs -0 nosetests
+
+coverage:
+	find pyagent/test -name '*[^_].py' -print0 | xargs -0 nosetests --with-coverage --cover-package="pyagent"
+
 packages: pypi rpm deb
 
 pypi:
