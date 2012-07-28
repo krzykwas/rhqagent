@@ -9,4 +9,6 @@ rpm:
 deb:
 
 clean:
-	rm -rf ./build ./dist ./pyagent.egg-info
+	python setup.py clean --all
+	rm -rf ./pyagent.egg-info
+	rm -rf ./dist
