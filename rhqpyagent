@@ -1,0 +1,107 @@
+#!/bin/sh
+#
+### BEGIN INIT INFO
+# Provides:          PyAgent
+# Required-Start:    $local_fs $remote_fs $syslog $network
+# Required-Stop:     $local_fs $remote_fs $syslog $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: Init script managing RHQ agent gathering data from CIM
+# Description:       Provides PyAgent on startup and terminates
+#                    on shutdown, allows for generating a configuration
+#                    file as well. This script assumes the pyagent script
+#                    is available under $PYAGENT_FILE_PATH and that pyagent
+#                    Python module is present in sys.path.
+# License:           GPLv3+ see http://www.gnu.org/licenses/gpl-3.0.txt
+### END INIT INFO
+#
+# Krzysztof „krzykwas” Kwaśniewski
+# Gdańsk, 28-07-2012
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# The PyAgent's entry point
+PYAGENT_FILE_PATH=${PYAGENT_FILE_PATH:-/usr/bin/pyagent.py}
+
+# Path to the config file
+PYAGENT_CONFIG_PATH=${PYAGENT_CONFIG_PATH:-/etc/pyagent}
+PYAGENT_CONFIG_FILE="${PYAGENT_CONFIG_PATH}/settings.xml"
+
+# PID file
+PYAGENT_PID_FILE=${PYAGENT_PID_FILE:-/var/run/pyagent.pid}
+
+start()
+{
+	start-stop-daemon \
+		--start \
+		--pidfile $PYAGENT_PID_FILE \
+		--make-pidfile \
+		--startas $PYAGENT_FILE_PATH \
+		--background \
+		-- \
+		--configuration-file $PYAGENT_CONFIG_FILE \
+		--debug-level CRITICAL
+}
+
+stop()
+{
+	start-stop-daemon \
+		--stop \
+		--pidfile $PYAGENT_PID_FILE \
+		--retry=TERM/5/KILL/5
+}
+
+setup()
+{
+	$PYAGENT_FILE_PATH --configuration-file $PYAGENT_CONFIG_FILE --setup
+}
+
+create_config_dir()
+{
+	if [ ! -d $PYAGENT_CONFIG_PATH ]
+	then
+		#Config path does not exist
+		if [ -w `dirname $PYAGENT_CONFIG_PATH` ]
+		then
+			#But the directory can be created
+			mkdir $PYAGENT_CONFIG_PATH
+		else
+			#The directory cannot be created, fail
+			echo "Insufficient permissions to create $PYAGENT_CONFIG_PATH, exiting..."
+			exit 0
+		fi
+	fi
+}
+
+create_config_dir
+
+case "$1" in
+start)
+	start
+	;;
+stop)
+	stop
+	;;
+restart)
+	stop && start
+	;;
+setup)
+	setup
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart|setup}"
+	exit 1
+esac
+

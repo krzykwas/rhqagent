@@ -20,6 +20,7 @@
 from .configurationFile.Parser import Parser
 import argparse
 import logging
+import os
 
 class Settings(object):
 	"""
@@ -36,8 +37,8 @@ class Settings(object):
 		self.__pastMeasurementsSize = None	#The number of past measurements stored for each metric
 		self.__debugLevel = None		#The higher value, the more info printed
 		self.__setup = False			#Generate a configuration file?
-		
-		self.__schemaPath = "pyagent/settings/settings.xsd"
+
+		self.__schemaPath = os.path.join(os.path.dirname(__file__), "settings.xsd")
 
 	def getConfigurationFile(self):
 		return self.__configurationFile

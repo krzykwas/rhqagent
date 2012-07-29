@@ -16,6 +16,7 @@ packages: pypi rpm deb
 
 pypi:
 	echo "include COPYING" > MANIFEST.in
+	echo "include rhqpyagent" >> MANIFEST.in
 	python setup.py build
 	python setup.py sdist
 

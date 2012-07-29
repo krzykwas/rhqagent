@@ -29,7 +29,12 @@ setup(
 			"settings.xsd",
 		],
 	},
-	scripts = ["pyagent.py"],
+	scripts = [
+		"pyagent.py",
+	],
+	data_files = [
+		("/etc/init.d", ["rhqpyagent"])
+	],
 	version = "1.0",
 	author = "Krzysztof Kwaśniewski",
 	author_email = "krzykwas@gmail.com",
