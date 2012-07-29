@@ -33,7 +33,7 @@ setup(
 		"pyagent.py",
 	],
 	data_files = [
-		("/etc/init.d", ["rhqpyagent"])
+		("/etc/init.d", ["run-pyagent.sh"])
 	],
 	version = "1.0",
 	author = "Krzysztof Kwaśniewski",

@@ -16,9 +16,11 @@ packages: pypi rpm deb
 
 pypi:
 	echo "include COPYING" > MANIFEST.in
-	echo "include rhqpyagent" >> MANIFEST.in
+	echo "include run-pyagent.sh" >> MANIFEST.in
 	python setup.py build
 	python setup.py sdist
+	rm -rf MANIFEST.in
+	rm -rf ./pyagent.egg-info
 
 rpm:
 
@@ -26,6 +28,4 @@ deb:
 
 clean:
 	python setup.py clean --all
-	rm -rf MANIFEST.in
-	rm -rf ./pyagent.egg-info
 	rm -rf ./dist
