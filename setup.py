@@ -19,6 +19,7 @@
 
 from distutils.core import setup
 from setuptools import find_packages
+import os
 
 setup(
 	name = "pyagent",
@@ -35,7 +36,7 @@ setup(
 	data_files = [
 		("/etc/init.d", ["run-pyagent.sh"])
 	],
-	version = "1.0",
+	version = os.getenv("PYAGENT_VERSION"),
 	author = "Krzysztof Kwaśniewski",
 	author_email = "krzykwas@gmail.com",
 	url = "http://rhqagent.blogspot.com/",

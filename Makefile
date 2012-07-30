@@ -14,6 +14,10 @@
 
 .PHONY : clean
 
+# The current version number
+PYAGENT_VERSION=1.0
+export PYAGENT_VERSION
+
 # The hash of the HEAD commit
 PYAGENT_GIT_COMMIT=$(shell git rev-parse HEAD)
 
@@ -78,11 +82,14 @@ fedora: fedora_build_pkg fedora_info
 
 # Build an RPM package for Fedora
 fedora_build_pkg:
-	git archive $(PYAGENT_GIT_COMMIT) -o ./packages/fedora/rpmbuild/SOURCES/pyagent-$(PYAGENT_GIT_COMMIT).tar
+	git archive $(PYAGENT_GIT_COMMIT)\
+		-o ./packages/fedora/rpmbuild/SOURCES/pyagent-$(PYAGENT_VERSION)-$(PYAGENT_GIT_COMMIT).tar\
+		--prefix pyagent-$(PYAGENT_VERSION)/
 	cd ./packages/fedora/rpmbuild/SPECS;\
 		rpmbuild\
 			--define "pyagent_git_commit $(PYAGENT_GIT_COMMIT)"\
 			--define "_topdir $(PWD)/packages/fedora/rpmbuild"\
+			--define "version $(PYAGENT_VERSION)"\
 			-ba pyagent.spec
 
 fedora_info:
