@@ -90,9 +90,13 @@ fedora_info:
 	@echo "Packages successfully created in ./packages/fedora"
 	@echo "=================================================="
 
-# Remove all files produces when packaging in the Fedora native format
+# Remove all files produced when packaging in the Fedora native format
 fedora_clean:
+	rm -rf ./packages/fedora/rpmbuild/BUILD/*
+	rm -rf ./packages/fedora/rpmbuild/BUILDROOT/*
+	rm -rf ./packages/fedora/rpmbuild/RPMS/*
 	rm -rf ./packages/fedora/rpmbuild/SOURCES/*
+	rm -rf ./packages/fedora/rpmbuild/SRPMS/*
 
 ###================================================================================================
 # CLEAN
