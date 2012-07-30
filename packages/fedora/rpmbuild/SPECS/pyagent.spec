@@ -7,13 +7,14 @@ License:	GPLv3+
 URL:		http://rhqagent.blogspot.com/
 # The source for this package was pulled from upstream vcs.
 # To get the source code, clone https://github.com/krzykwas/rhqagent.git
-# and run `git archive HASH -o pyagent-HASH.tar` where HASH is equal
-# to the value of Source0.
-Source0:	%{pyagent_git_commit}
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# and run `git archive HASH -o pyagent-HASH.tar` where HASH is included
+# in the name of the archive with the source code (in Source0).
+Source0:	pyagent-%{pyagent_git_commit}.tar
+BuildRoot:	%{_topdir}/BUILDROOT/
 
-BuildRequires:	
-Requires:	
+BuildRequires:	python >= 2.7
+Requires:	python >= 2.7, python < 3
+Requires:	pywbem
 
 %description
 

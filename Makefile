@@ -80,7 +80,10 @@ fedora: fedora_build_pkg fedora_info
 fedora_build_pkg:
 	git archive $(PYAGENT_GIT_COMMIT) -o ./packages/fedora/rpmbuild/SOURCES/pyagent-$(PYAGENT_GIT_COMMIT).tar
 	cd ./packages/fedora/rpmbuild/SPECS;\
-		rpmbuild --define "pyagent_git_commit $(PYAGENT_GIT_COMMIT)" -ba pyagent.spec
+		rpmbuild\
+			--define "pyagent_git_commit $(PYAGENT_GIT_COMMIT)"\
+			--define "_topdir $(PWD)/packages/fedora/rpmbuild"\
+			-ba pyagent.spec
 
 fedora_info:
 	@echo "=================================================="
