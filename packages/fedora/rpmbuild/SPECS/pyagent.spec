@@ -17,6 +17,8 @@ BuildRequires:	python >= 2.7
 Requires:	python >= 2.7, python < 3
 Requires:	pywbem
 
+BuildArch:	noarch
+
 %description
 RHQ agent gathering data from CIM servers
 -----------------------------------------
@@ -45,12 +47,11 @@ changes needed to make the agent work with Python 3 if any at all.
 %setup -q
 
 %build
-%configure
-make %{?_smp_mflags}
+%{__python} setup.py build
 
 %install
 rm -rf %{buildroot}
-make install DESTDIR=%{buildroot}
+%{__python} setup.py install -O1 --skip-build --root %{buildroot}
 
 %clean
 rm -rf %{buildroot}
