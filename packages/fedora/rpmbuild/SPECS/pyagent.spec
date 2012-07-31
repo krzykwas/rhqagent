@@ -15,6 +15,7 @@ BuildRoot:	%{_topdir}/BUILDROOT/
 
 BuildRequires:	python >= 2.7
 Requires:	python >= 2.7, python < 3
+Requires:	python-lxml >= 2.3.3
 Requires:	pywbem
 
 BuildArch:	noarch

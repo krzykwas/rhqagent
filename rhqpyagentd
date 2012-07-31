@@ -33,7 +33,7 @@
 #
 
 # The PyAgent's entry point
-PYAGENT_FILE_PATH=${PYAGENT_FILE_PATH:-/usr/bin/pyagent.py}
+PYAGENT_FILE_PATH=${PYAGENT_FILE_PATH:-/usr/bin/rhqpyagent}
 
 # Path to the config file
 PYAGENT_CONFIG_PATH=${PYAGENT_CONFIG_PATH:-/etc/pyagent}
