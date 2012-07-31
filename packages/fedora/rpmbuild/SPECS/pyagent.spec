@@ -52,12 +52,20 @@ changes needed to make the agent work with Python 3 if any at all.
 %install
 rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
+mkdir -pv %{buildroot}/etc/%{name}
+touch %{buildroot}/etc/%{name}/settings.xml
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc
+%doc README
+%doc COPYING
+%config(missingok) %ghost /etc/%{name}/settings.xml
+%{python_sitelib}/%{name}/
+%{python_sitelib}/%{name}-%{version}-*.egg-info
+/usr/bin/pyagent.py
+/etc/init.d/run-pyagent.sh
 
 %changelog
