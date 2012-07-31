@@ -65,7 +65,7 @@ rm -rf %{buildroot}
 %config(missingok) %ghost /etc/%{name}/settings.xml
 %{python_sitelib}/%{name}/
 %{python_sitelib}/%{name}-%{version}-*.egg-info
-/usr/bin/pyagent.py
-/etc/init.d/run-pyagent.sh
+/usr/bin/rhqpyagent
+/etc/init.d/rhqpyagentd
 
 %changelog

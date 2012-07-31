@@ -51,7 +51,7 @@ pypi_build_pkg:
 	mkdir -p ./packages/pypi
 	# Create a manifest on-the-fly
 	echo "include COPYING" > MANIFEST.in
-	echo "include run-pyagent.sh" >> MANIFEST.in
+	echo "include rhqpyagentd" >> MANIFEST.in
 	# Run setup.py
 	python setup.py build
 	python setup.py sdist

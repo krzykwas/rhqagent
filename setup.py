@@ -31,10 +31,10 @@ setup(
 		],
 	},
 	scripts = [
-		"pyagent.py",
+		"rhqpyagent",
 	],
 	data_files = [
-		("/etc/init.d", ["run-pyagent.sh"])
+		("/etc/init.d", ["rhqpyagentd"])
 	],
 	version = os.getenv("PYAGENT_VERSION"),
 	author = "Krzysztof Kwaśniewski",
