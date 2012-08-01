@@ -55,6 +55,8 @@ rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 mkdir -pv %{buildroot}/etc/%{name}
 touch %{buildroot}/etc/%{name}/settings.xml
+mkdir -pv %{buildroot}/var/run
+touch %{buildroot}/var/run/pyagent.pid
 
 %clean
 rm -rf %{buildroot}
@@ -64,6 +66,7 @@ rm -rf %{buildroot}
 %doc README
 %doc COPYING
 %config(missingok) %ghost /etc/%{name}/settings.xml
+%ghost /var/run/pyagent.pid
 %{python_sitelib}/%{name}/
 %{python_sitelib}/%{name}-%{version}-*.egg-info
 /usr/bin/rhqpyagent
