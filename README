@@ -18,6 +18,10 @@ Dependencies:
 1) python-wbem[4]
 2) python-nose[5]
 3) python-coverage[6]
+4) python-lxml [7]
+5) python-distutils [8]
+6) make
+7) rpmbuild (to build an RPM package for Fedora)
 
 	The dependencies may be very likely satisfied using your distributions' software repositiories, though the packages' names may differ. Moreover you might use PyAgent without some of the above, like 2. or 3. used for unit tests and managing code coverage.
 
@@ -28,3 +32,5 @@ Dependencies:
 [4] http://pywbem.sourceforge.net/
 [5] http://nose.readthedocs.org/en/latest/
 [6] http://nedbatchelder.com/code/coverage/
+[7] http://lxml.de/
+[8] http://pypi.python.org/pypi/setuptools/0.6c11
