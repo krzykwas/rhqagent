@@ -42,25 +42,47 @@ PYAGENT_CONFIG_FILE="${PYAGENT_CONFIG_PATH}/settings.xml"
 # PID file
 PYAGENT_PID_FILE=${PYAGENT_PID_FILE:-/var/run/pyagent.pid}
 
+is_defined()
+{
+	type $1 2>/dev/null
+}
+
 start()
 {
-	start-stop-daemon \
-		--start \
-		--pidfile $PYAGENT_PID_FILE \
-		--make-pidfile \
-		--startas $PYAGENT_FILE_PATH \
-		--background \
-		-- \
-		--configuration-file $PYAGENT_CONFIG_FILE \
-		--debug-level CRITICAL
+	if is_defined start-stop-daemon
+	then
+		start-stop-daemon \
+			--start \
+			--pidfile $PYAGENT_PID_FILE \
+			--make-pidfile \
+			--startas $PYAGENT_FILE_PATH \
+			--background \
+			-- \
+			--configuration-file $PYAGENT_CONFIG_FILE \
+			--debug-level CRITICAL
+	else
+		stop
+		echo $$ > $PYAGENT_PID_FILE
+		exec $PYAGENT_FILE_PATH \
+			--configuration-file $PYAGENT_CONFIG_FILE \
+			--debug-level CRITICAL \
+			&
+	fi
 }
 
 stop()
 {
-	start-stop-daemon \
-		--stop \
-		--pidfile $PYAGENT_PID_FILE \
-		--retry=TERM/5/KILL/5
+	if is_defined start-stop-daemon
+	then
+		start-stop-daemon \
+			--stop \
+			--pidfile $PYAGENT_PID_FILE \
+			--retry=TERM/5/KILL/5
+	elif [ -f $PYAGENT_PID_FILE ]
+	then
+		read pid < $PYAGENT_PID_FILE 
+		kill -9 $pid 2>/dev/null
+	fi
 }
 
 setup()
