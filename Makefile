@@ -1,5 +1,6 @@
 .PHONY : test
 .PHONY : coverage
+.PHONY : docs
 .PHONY : packages
 
 .PHONY : pypi
@@ -30,6 +31,13 @@ test:
 
 coverage:
 	find pyagent/test -name '*[^_].py' -print0 | xargs -0 nosetests --with-coverage --cover-package="pyagent"
+
+###================================================================================================
+# DOCS
+###================================================================================================
+
+docs:
+	cd docs; pdflatex docs.tex && pdflatex docs.tex
 
 ###================================================================================================
 # PACKAGES
@@ -111,3 +119,4 @@ fedora_clean:
 
 # Remove the files created during packaging
 clean: pypi_clean fedora_clean
+	cd docs; rm -rf docs.aux docs.log docs.out docs.pdf docs.toc

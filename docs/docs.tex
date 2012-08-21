@@ -1,0 +1,58 @@
+\documentclass[a4paper,twoside,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{indentfirst,graphicx,amsmath}
+\usepackage[left=2cm,top=2cm,right=2cm,nohead]{geometry}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\pagestyle{plain}
+
+\makeatletter
+\renewcommand\@seccntformat[1]{\csname the#1\endcsname.\quad}
+\renewcommand\numberline[1]{#1.\hskip0.7em}
+\makeatother
+
+\author{Krzysztof Kwaśniewski}
+\title{\LARGE Documentation for PyAgent}
+
+\begin{document}
+	\maketitle
+
+	\tableofcontents
+	\newpage
+
+	\section{Summary}
+		PyAgent is an agent for RHQ, an enterprise management system. It provides RHQ\footnote{\href{http://rhq-project.org/display/RHQ/Home}{http://rhq-project.org/display/RHQ/Home}} with data gathered from desktop stations scattered across the network so that the stations could be monitored and managed. The data RHQ can handle can be of various types, one refers to them as \emph{metrics}. These may include for instance repetitive measurements of a CPU's temperature over the time.
+
+		To collect this data, PyAgent communicates with CIM servers, which are WBEM\footnote{\href{http://dmtf.org/standards/wbem}{http://dmtf.org/standards/wbem}}-based services. The WBEM standard describes an abstract interface that allows to interact with different computer systems and - for instance - access a data on a aforementioned CPU's temperature (and many more).
+
+		PyAgent is extensible and it's possible to quite easily add to it support for more protocols - so that it could gather the data from different sources, not only WBEM-based, and send it to a different destination, not only RHQ. Although now there does not seem to be an urgent need for that, one day it may turn out to be necessary.
+
+		This project has been started in April/May 2012 as part of The Google Summer Of Code program, mentored by Heiko Rupp\footnote{\href{https://community.jboss.org/people/pilhuhn}{https://community.jboss.org/people/pilhuhn}}.
+		
+		The code is implemented in Python 2.x; will not work with Python 3.x, since it depends on a python-wbem library to communicate with WBEM-based services. The following list is - I hope - a full list of PyAgent's dependencies:
+
+		\begin{itemize}
+			\item python-wbem\footnote{\href{http://pywbem.sourceforge.net/}{http://pywbem.sourceforge.net/}}
+			\item python-nose\footnote{\href{http://nose.readthedocs.org/en/latest/}{http://nose.readthedocs.org/en/latest/}}
+			\item python-coverage\footnote{\href{http://nedbatchelder.com/code/coverage/}{http://nedbatchelder.com/code/coverage/}}
+			\item python-lxml\footnote{\href{http://lxml.de/}{http://lxml.de/}}
+			\item python-distutils\footnote{\href{http://pypi.python.org/pypi/setuptools/0.6c11}{http://pypi.python.org/pypi/setuptools/0.6c11}}
+			\item make
+			\item rpmbuild (to build an RPM package for Fedora)
+			\item pdflatex (to produce this documentation)
+		\end{itemize}
+
+		This is a free software licensed under the terms of GNU General Public License version 3 or later as published by the Free Software Foundation.
+
+	\section{Running the code}
+		To run the code, you need to invoke the \texttt{rhqagent} startup script located in the top project's directory. As a minimum, you need to provide an argument \texttt{-{}-configuration-file} pointing at an xml configuration file, as PyAgent needs to know where it can gather the data from and where should it send it to.
+
+		PyAgent can help you generate such a configuration file, if you also pass a \texttt{-{}-setup} argument to it.
+
+		For more details, please invoke PyAgent with a \texttt{-{}-help} argument.
+
+		You can also build packages, currently an RPM and in the Python Package Index format, so that the code could be distributed easier. After installing such a package, you will be also able to invoke PyAgent with an init script \texttt{rhqagentd}. To do that (at least in both Ubuntu and Fedora), invoke a command \texttt{service rhqpyagentd} to get a list of supported arguments.
+
+	\section{Directory structure}
+\end{document}
+
