@@ -22,6 +22,7 @@ Dependencies:
 5) python-distutils [8]
 6) make
 7) rpmbuild (to build an RPM package for Fedora)
+8) pdflatex (to produce pdf documentation)
 
 	The dependencies may be very likely satisfied using your distributions' software repositiories, though the packages' names may differ. Moreover you might use PyAgent without some of the above, like 2. or 3. used for unit tests and managing code coverage.
 

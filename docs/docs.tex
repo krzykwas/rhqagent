@@ -54,5 +54,49 @@
 		You can also build packages, currently an RPM and in the Python Package Index format, so that the code could be distributed easier. After installing such a package, you will be also able to invoke PyAgent with an init script \texttt{rhqagentd}. To do that (at least in both Ubuntu and Fedora), invoke a command \texttt{service rhqpyagentd} to get a list of supported arguments.
 
 	\section{Directory structure}
+		To give you an overall impression on how this project is organised, here you have a brief description of the files it consists of.
+
+		\begin{itemize}
+			\item COPYING -- contains the text of GPLv3 license under which (or any later) this project is licensed.
+			\item docs -- the documentation of PyAgent lives here in a TEX format. To turn it into PDF, run \emph{make docs} in the main project's directory.
+			\item Makefile -- lets one perform a couple of actions. One can use it to run unit tests with or without code coverage measurement; create a PDF file with documentation out of this one in a TEX format; build an RPM or a PyPi package and - finally - clean up all the temporary files created during the previous operations.
+			\item packages -- RPM and PyPi packages are created in this directory.
+			\item pyagent -- contains the source code of the application.
+				\begin{itemize}
+					\item agent -- a main module of PyAgent that governs all the operations it performs.
+					\item data
+						\begin{itemize}
+							\item model -- PyAgent's data model.
+							\item provider -- the abstract definition for classes that are able to provide data for PyAgent and all the implementations derived from it.
+							\item sender -- the abstract definition for classes that are able to pass further data gathered by PyAgent and all the implementations derived from it.
+						\end{itemize}
+					\item exception -- contains definitions of exceptions thrown by PyAgent's submodules.
+					\item \_\_init.py\_\_ -- necessary to turn this directory into a Python module (available for importing).
+					\item settings -- a module responsible for generating and parsing the configuration file as well as parsing the arguments passed in the command line.
+						\begin{itemize}
+							\item sample\_settings.xml -- sample configuration file. If you want to define your own configuration file by hand, here you will find an example of such a file.
+							\item settings.xsd -- an xml schema for PyAgent's configuration file. The configuration file must comply with this schema.
+						\end{itemize}
+					\item test -- unit tests live here.
+				\end{itemize}
+			\item README -- a brief description of the project.
+			\item rhqpyagent -- a startup script for PyAgent.
+			\item rhqpyagentd -- an init script that turns PyAgent to behave as a daemon (system service), this is the expected way of running PyAgent after its RPM or PyPi package has been installed.
+			\item setup.py -- necessary to build a PyPi package, you don't need to use it directly, use Makefile instead.
+		\end{itemize}
+
+	\section{How to...?}
+		The syntax of the configuration file is somewhat self-explanatory and in the pyagent.settings submodule there is a sample configuration file, I won't go into deep details here, it's not very complicated. On the other hand a couple of things need to be written down.
+
+		\begin{itemize}
+			\item Add a new data provider/sender
+
+				As mentioned before, PyAgent was designed in an extensible way. You can quite easily add to it a new data provider (let's focus on that, data senders work in the same way). You do this by subclassing pyagent.data.provider.AbstractDataProvider.AbstractDataProvider. No, this is not a  mistake. The first AbstractDataProvider refers to the module name and the class named in the same way is stored inside.
+
+				Your implementation has to be called according to the schema \texttt{<<PROTOCOL>>DataProvider} and live in a file \texttt{pyagent.data.provider.implementation.<<PROTOCOL>>DataProvider}, where \texttt{<<PROTOCOL>>} is an uppercase name of the protocol for which you're just adding a new provider. For instance, to support FTP, you would create a class FTPDataProvider in pyagent.data.provider.\-implementation.FTPDataProvider. After that, you can put \emph{ftp} as a protocol name in the configuration file and PyAgent will understand what your intentions are.
+
+			\item Add a callback
+		\end{itemize}
+
 \end{document}
 
