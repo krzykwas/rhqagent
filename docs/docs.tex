@@ -1,9 +1,9 @@
 \documentclass[a4paper,twoside,11pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{indentfirst,graphicx,amsmath}
+\usepackage{indentfirst}
+\usepackage{fancyvrb}
 \usepackage[left=2cm,top=2cm,right=2cm,nohead]{geometry}
 \usepackage{hyperref}
-\usepackage{tabularx}
 \pagestyle{plain}
 
 \makeatletter
@@ -86,17 +86,55 @@
 		\end{itemize}
 
 	\section{How to...?}
-		The syntax of the configuration file is somewhat self-explanatory and in the pyagent.settings submodule there is a sample configuration file, I won't go into deep details here, it's not very complicated. On the other hand a couple of things need to be written down.
+		The syntax of the configuration file is somewhat self-explanatory and in the pyagent.settings submodule there is a sample configuration file. I won't go into deep details here, as it's not very complicated. On the other hand a couple of things need to be written down.
 
-		\begin{itemize}
-			\item Add a new data provider/sender
+		\subsection{Add a new data provider/sender}
 
-				As mentioned before, PyAgent was designed in an extensible way. You can quite easily add to it a new data provider (let's focus on that, data senders work in the same way). You do this by subclassing pyagent.data.provider.AbstractDataProvider.AbstractDataProvider. No, this is not a  mistake. The first AbstractDataProvider refers to the module name and the class named in the same way is stored inside.
+			As mentioned before, PyAgent was designed in an extensible way. You can quite easily add to it a new data provider (let's focus on that, data senders work in the same way). You do this by subclassing pyagent.data.provider.AbstractDataProvider.AbstractDataProvider. No, this is not a  mistake. The first AbstractDataProvider refers to the module name and the class named in the same way is stored inside.
 
-				Your implementation has to be called according to the schema \texttt{<<PROTOCOL>>DataProvider} and live in a file \texttt{pyagent.data.provider.implementation.<<PROTOCOL>>DataProvider}, where \texttt{<<PROTOCOL>>} is an uppercase name of the protocol for which you're just adding a new provider. For instance, to support FTP, you would create a class FTPDataProvider in pyagent.data.provider.\-implementation.FTPDataProvider. After that, you can put \emph{ftp} as a protocol name in the configuration file and PyAgent will understand what your intentions are.
+			Your implementation has to be called according to the schema \texttt{<<PROTOCOL>>DataProvider} and live in a file \texttt{pyagent.data.provider.implementation.<<PROTOCOL>>DataProvider}, where \texttt{<<PROTOCOL>>} is an uppercase name of the protocol for which you're just adding a new provider. For instance, to support FTP, you would create a class FTPDataProvider in pyagent.\-data.\-provider.\-implementation.\-FTPDataProvider. After that, you can put \emph{ftp} as a protocol name in the configuration file and PyAgent will understand what your intentions are.
 
-			\item Add a callback
-		\end{itemize}
+		\subsection{Add a callback}
+
+			What is a callback and why it there a need for it? At times you might want not only to pass raw measurements' data to RHQ, but also to first prepare it in some way. Let's consider a couple of examples -- well, maybe some of them are not very realistic, but just to give you an overall impression:
+			\begin{itemize}
+				\item Instead of analyzing the amount of free space on your hard disk, you might want to compute a derivative of it over the time and analyze this \emph{artificial metric}.
+				\item You might want to measure some kind of an unreliable metric, burden with huge errors. Let's assume its value in fact cannot ever go over 100, however when the real value and an error add up, then it's often higher and you prefer to rather return 100 in such a case. So you slightly modify your original metric and you are rather monitoring an \emph{artificial}, another one.
+				\item The system you are monitoring might return values expressed in a 7-based numbering system and you would need to convert them to a 11-based one for some reason. So, just like in the previous examples, you produce an \emph{artificial metric} for that.
+			\end{itemize}
+			Obviously, there are many more scenarios. The point is: you need to define a convert function that will compute values of the artificial metric that fulfills your requirements.
+				
+			So, basically, a callback is a Python function that you define and that will be executed by PyAgent over and over to compute the value for an artificial metric. The configuration file generator included in PyAgent does not help creating callbacks, as they are quite an advanced issue. You need to define them on your own, by hand.
+
+			A callback definition consists of three things. The first one is wrapped up with \texttt{function} tags and it defines the Python function mentioned above, called from time to time to compute the metric's value. The second one is a specification of parameters passed to this function and the last part is a list of destination servers' mappings -- once you have your metric computed, what should PyAgent do with it? You need to give it guidance on where to send the measurements.
+
+			Let's see an example:
+			\begin{Verbatim}
+<callbacks>
+	<callback>
+		<function>
+		<![CDATA[
+metric1 = params[0]
+metric2 = params[1]
+
+return metric1[0].value+0.5*metric1[1].value \
+	+ metric2[0].value+0.5*metric2[1].value
+		]]>
+		</function>
+			\end{Verbatim}
+
+   			A callback, as already mentioned, is a Python function:
+			\begin{Verbatim}
+def fun(params):
+	[[CODE]]
+			\end{Verbatim}
+			and the user is the one responsible for providing the contents for [[CODE]]. \textbf{The code for callback you'll write must be aligned to the beginning of the line - pay attention to the line with an assignment: metric1 = params[0]. The callback wouldn't work with any space prepended to this statement. It must start at the beginning of the line.}
+
+			When writing your own callback you are provided with a variable \texttt{params} which is a list of arguments that you specify in the configuration file after the callback's source code. Consider the example shown above where two arguments are pulled from params. Now what are actually \texttt{metric1} and \texttt{metric2}? Well, those are also lists - lists of measurements of appropriate metrics taken in the past. By default 100 of them are available, the capacity of past values registry can be changed at command line, when starting the agent up. The newest measurement is kept at index 0 with increasing indices supplying older values.
+
+			For each measurement taken, that is \texttt{params[i][j]}, you can use two properties. The first, \texttt{value}, is the actual value of the measurement. The second, \texttt{timestamp}, is a floating point number indicating the time of having taken the measurement.
+
+			Summing up the things written above, you would write \texttt{params[3][1].timestamp} to access the time when the penultimate measurement of the fourth argument of the callback was taken. You should not rely on any behaviour of callbacks that is not defined here.
 
 \end{document}
 

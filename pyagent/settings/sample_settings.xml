@@ -114,12 +114,12 @@ return metric1[0].value+0.5*metric1[1].value + metric2[0].value+0.5*metric2[1].v
 			    </param>
 			</params>
 			<dst-servers-mappings>
-		        <dst-server-mapping>
-		            <name>rhq-ubuntu</name>
-		            <map-to>CpuPerc.idle</map-to>
-		            <update-interval>6</update-interval>
-		        </dst-server-mapping>
-		    </dst-servers-mappings>
+				<dst-server-mapping>
+					<name>rhq-ubuntu</name>
+					<map-to>CpuPerc.idle</map-to>
+					<update-interval>6</update-interval>
+				</dst-server-mapping>
+			</dst-servers-mappings>
 		</callback>
 	</callbacks>
 </settings>
