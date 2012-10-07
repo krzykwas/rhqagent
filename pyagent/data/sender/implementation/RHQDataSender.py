@@ -119,7 +119,9 @@ class RHQDataSender(AbstractDataSender):
 	
 	def __getSchedules(self):
 		uri = "resource/{0}/schedules".format(self.__platformId)
-		self.__schedules = json.loads(self.__restClient.request(uri))	
+		self.__schedules = json.loads(self.__restClient.request(uri))
+		
+		self.__logger.debug("Following schedules found:\n{0}".format(json.dumps(self.__schedules, indent=3)))
 		
 	def __sendMeasurement(self, scheduleId, timestamp, value):
 		uri = "metric/data/{0}/raw/{1}".format(scheduleId, timestamp)
