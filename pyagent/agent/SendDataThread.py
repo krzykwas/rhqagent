@@ -47,5 +47,3 @@ class SendDataThread(Thread):
 				dataSender.sendData(measurement)
 			except Empty:
 				pass
-			except Exception as e:
-				self.__logger.error(e)

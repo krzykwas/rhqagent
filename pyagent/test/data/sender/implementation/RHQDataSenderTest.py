@@ -40,8 +40,8 @@ class RHQDataSenderTest(unittest.TestCase):
 	def test_connect_IsDefined(self):
 		self.assertIn("connect", dir(self.__sut), "Method connect not defined")
 		
-	def test_getTimestamp_IsDefined(self):
-		self.assertIn("getTimestamp", dir(self.__sut), "Method getTimestamp not defined")
+	def test_update_IsDefined(self):
+		self.assertIn("update", dir(self.__sut), "Method update not defined")
 		
 	def test_sendAvailabilityState_IsDefined(self):	
 		self.assertIn("sendAvailabilityState", dir(self.__sut), "Method sendAvailabilityState not defined")
@@ -57,6 +57,3 @@ class RHQDataSenderTest(unittest.TestCase):
 			self.__sut.authenticate()
 		except Exception as e:
 			self.fail("Exception {0} raised unexpectedly".format(e))
-			
-	def test_getTimestamp_ReturnsInteger(self):
-		self.assertIsInstance(self.__sut.getTimestamp(), int, "Method getTimestamp did not return an integer")

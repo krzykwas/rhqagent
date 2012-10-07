@@ -41,16 +41,13 @@ class CollectDataThread(Thread):
 		callbacks = settings.getCallbacks()
 		
 		while True:
-			try:
-				for dataMapping in dataMappings:
-					self.handleDataMapping(dataMapping)
+			for dataMapping in dataMappings:
+				self.handleDataMapping(dataMapping)
 
-				for callback in callbacks:
-					self.handleCallback(callback)
-				
-				time.sleep(1)
-			except Exception as e:
-				self.__logger.error(e)	
+			for callback in callbacks:
+				self.handleCallback(callback)
+			
+			time.sleep(1)	
 			
 	def handleDataMapping(self, dataMapping):
 		srcServer = dataMapping.getSrcServer()

@@ -43,3 +43,6 @@ class AbstractDataSenderTest(unittest.TestCase):
 		
 	def test_sendData_IsDefined(self):	
 		self.assertIn("sendData", dir(AbstractDataSender), "Method sendData not defined")
+
+	def test_update_IsDefined(self):	
+		self.assertIn("update", dir(AbstractDataSender), "Method update not defined")

@@ -44,29 +44,40 @@ class RHQDataSender(AbstractDataSender):
 		self.__logger = logging.getLogger(__name__)
 		
 	def authenticate(self):
+		"""
+		This implementation sends authentication data with each request of RestClient.
+		"""
+		
 		pass
 	
 	def connect(self):
+		"""
+		Creates a platform and retrieves schedules.
+		"""
+		
 		try:
 			self.__createPlatform()
-			self.__getSchedules()
-		except Exception as e:
+			self.update()
+		except BaseException as e:
 			self.__logger.critical("Unexpected exception thrown while initiating a connection with RHQ: " + str(e))
 			thread.interrupt_main()
 	
 	def sendAvailabilityState(self, state):
-		uri = "resource/" + self.__platformId + "/availability"
-		timestamp = self.getTimestamp()
-		data = json.dumps({
-			"type": state,
-			"resourceId": self.__platformId,
-			"since": timestamp,
-			"until": timestamp + 3600,
-		})
+		"""
+		Informs RHQ we are on-line. Used as well to let it know we disappear.
+		"""
+		
+		uri = "resource/{0}/availability".format(self.__platformId)
+		timestamp = self.__getTimestamp()
+		data = json.dumps({"type": state, "resourceId": self.__platformId, "since": timestamp, "until": timestamp + 3600,})
 		self.__restClient.request(uri, data, "PUT")
 	
 	def sendData(self, measurement):
-		timestamp = self.getTimestamp()
+		"""
+		Sends a metric data.
+		"""
+		
+		timestamp = self.__getTimestamp()
 		mapping = measurement.getDstServerMapping()
 		schedule = self.__getSchedule(mapping.getMapTo())
 		
@@ -75,15 +86,11 @@ class RHQDataSender(AbstractDataSender):
 			return
 		
 		try:
-			mapping.setUpdateInterval(schedule["collectionInterval"])
-			self.__logger.debug(
-				"Update interval for schedule named {0} overriden with {1}".format(
-					mapping.getMapTo(),
-					schedule["collectionInterval"]
-				)
-			)
+			if mapping.getUpdateInterval() != schedule["collectionInterval"]:
+				mapping.setUpdateInterval(schedule["collectionInterval"])
+				self.__logger.debug("Update interval for schedule named {0} overriden with {1}.".format(mapping.getMapTo(), schedule["collectionInterval"]))
 		except KeyError:
-			self.__logger.warning("Update interval not defined for schedule {0}".format(mapping.getMapTo()))
+			self.__logger.warning("Update interval not defined for schedule {0}. The default value of {1} will be used.".format(mapping.getMapTo(), mapping.getUpdateInterval()))
 		
 		scheduleId = schedule["scheduleId"]
 		scheduleType = schedule["type"].lower()
@@ -94,14 +101,27 @@ class RHQDataSender(AbstractDataSender):
 		elif scheduleType == "trait":
 			self.__sendTrait(scheduleId, value)
 	
-	def getTimestamp(self):
+	def __getTimestamp(self):
 		"""
-		Returns current timestamp converted to integer. 
+		Returns current timestamp converted to an integer. 
 		"""
+		
 		return int(time.time())
+					
+	def update(self):
+		"""
+		Invoked periodically. The schedules at the RHQ's side may be changed and here they are updated.
+		"""
+		
+		self.__logger.debug("Updating schedules.")
+		self.__getSchedules()
 	
 	def __createPlatform(self):
-		uri = "resource/platform/" + self.__platformName
+		"""
+		Before anything can be done, a platform needs to be created (RHQ's rest api requirement).
+		"""
+		
+		uri = "resource/platform/{0}".format(self.__platformName)
 		data = json.dumps({"value" : self.__platformType})
 		
 		responseJson = self.__restClient.request(uri, data)
@@ -111,6 +131,10 @@ class RHQDataSender(AbstractDataSender):
 		self.__logger.debug("Platform with id {0} created".format(self.__platformId))
 	
 	def __getSchedule(self, scheduleName):
+		"""
+		Returns a single schedule named scheduleName.
+		"""
+		
 		for schedule in self.__schedules:
 			if schedule["scheduleName"] == scheduleName:
 				return schedule
@@ -118,26 +142,36 @@ class RHQDataSender(AbstractDataSender):
 		raise KeyError("No schedule named {0} found".format(scheduleName))
 	
 	def __getSchedules(self):
+		"""
+		Queries RHQ for the list of current schedules.
+		"""
+		
 		uri = "resource/{0}/schedules".format(self.__platformId)
 		self.__schedules = json.loads(self.__restClient.request(uri))
 		
 		self.__logger.debug("Following schedules found:\n{0}".format(json.dumps(self.__schedules, indent=3)))
 		
 	def __sendMeasurement(self, scheduleId, timestamp, value):
-		uri = "metric/data/{0}/raw/{1}".format(scheduleId, timestamp)
-		params = json.dumps({
-			"timeStamp" : timestamp,
-			"value" : value,
-			"scheduleId" : scheduleId
-		})
+		"""
+		Sends measurement metric.
+		"""
 		
+		uri = "metric/data/{0}/raw/{1}".format(scheduleId, timestamp)
+		params = json.dumps({"timeStamp" : timestamp, "value" : value, "scheduleId" : scheduleId,})
 		self.__restClient.request(uri, params, "PUT")
 
 	def __sendTrait(self, scheduleId, value):
+		"""
+		Sends trait metric.
+		"""
+		
 		uri = "metric/data/{0}/trait".format(scheduleId)
-		self.__restClient.request(uri, json.dumps({"value": value}), "PUT")
+		self.__restClient.request(uri, json.dumps({"value": value,}), "PUT")
 
 	class __RestClient(object):
+		"""
+		A helper class used to encapsulate the operations connected with performing rest requests.
+		"""
 		
 		def __init__(self, dstServer):
 			self.__baseUri = dstServer.getUri() + "/rest/1/"
@@ -153,11 +187,7 @@ class RHQDataSender(AbstractDataSender):
 			opener = urllib2.build_opener(authhandler)
 			#opener = urllib2.build_opener(authhandler, urllib2.HTTPHandler(debuglevel=1))
 
-			headers = {
-				"accept": "application/json",
-				"content-type": "application/json"
-			}
-			
+			headers = {"accept": "application/json", "content-type": "application/json"}
 			request = urllib2.Request(uri, data=params, headers=headers)
 			
 			if method is not None:

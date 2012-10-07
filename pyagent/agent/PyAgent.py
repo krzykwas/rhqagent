@@ -17,11 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from .CollectDataThread import CollectDataThread
-from .SendDataThread import SendDataThread
 from ..data.model.PastMeasurementsManager import PastMeasurementsManager
 from ..data.provider.DataProviderFactory import DataProviderFactory
 from ..data.sender.DataSenderFactory import DataSenderFactory
+from .CollectDataThread import CollectDataThread
+from .SendDataThread import SendDataThread
 import logging
 import sys
 import time
@@ -81,6 +81,7 @@ class PyAgent(object):
 			while True:
 				for dataSender in self.__dataSenders.values():
 					dataSender.sendAvailabilityState("UP")
+					dataSender.update()
 					
 				time.sleep(60)
 		except KeyboardInterrupt:

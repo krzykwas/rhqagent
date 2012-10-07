@@ -54,6 +54,13 @@ class AbstractDataSender(object):
 		Sends metric data.
 		"""
 		pass
+	
+	@abstractmethod
+	def update(self):
+		"""
+		Periodically invoked. Update operations can be performed here.
+		"""
+		pass
 
 	def getDstServer(self):
 		return self.__dstServer
