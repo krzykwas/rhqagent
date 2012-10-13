@@ -30,7 +30,7 @@
 	</xs:complexType>
 
 	<xs:complexType name="srcServersType">
-		<xs:sequence maxOccurs="unbounded">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="src-server" type="srcServerType" />
 		</xs:sequence>
 	</xs:complexType>
@@ -46,7 +46,7 @@
 	</xs:complexType>
 
 	<xs:complexType name="dstServersType">
-		<xs:sequence maxOccurs="unbounded">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="dst-server" type="dstServerType" />
 		</xs:sequence>
 	</xs:complexType>
