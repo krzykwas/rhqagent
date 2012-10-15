@@ -25,7 +25,7 @@ from ...data.model.SrcServer import SrcServer
 from ...data.model.callback.Callback import Callback
 from ...data.model.callback.Param import Param
 from ...exception.ConfigurationException import ConfigurationException
-import lxml.etree as etree
+from lxml import etree
 
 class Parser(object):
 	"""
