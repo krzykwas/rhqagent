@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Krzysztof „krzykwas” Kwaśniewski
 # Gdańsk, 12-10-2012
@@ -33,6 +33,8 @@ class CIMIndicationHandler(BaseHTTPRequestHandler, CIMHandler):
 	def __init__(self, request, clientAddress, server):
 		self.__logger = logging.getLogger(__name__)
 		CIMHandler.__init__(self)
+		
+		# This one must be last!
 		BaseHTTPRequestHandler.__init__(self, request, clientAddress, server)
 
 	def do_GET(self):

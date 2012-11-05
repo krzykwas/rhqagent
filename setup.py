@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Krzysztof „krzykwas” Kwaśniewski
 # Gdańsk, 28-07-2012
@@ -17,32 +17,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from distutils.core import setup
+from distutils.core import setup 
 from setuptools import find_packages
 import os
 
 setup(
-	name = "pyagent",
-	packages = find_packages(),
-	package_data = {
+	name="pyagent",
+	packages=find_packages(),
+	package_data={
 		"pyagent.settings" : [
 			"sample_settings.xml",
 			"settings.xsd",
 		],
 	},
-	scripts = [
+	scripts=[
 		"rhqpyagent",
 	],
-	data_files = [
+	data_files=[
 		("/etc/init.d", ["rhqpyagentd"])
 	],
-	version = os.getenv("PYAGENT_VERSION"),
-	author = "Krzysztof Kwaśniewski",
-	author_email = "krzykwas@gmail.com",
-	url = "http://rhqagent.blogspot.com/",
+	version=os.getenv("PYAGENT_VERSION"),
+	author="Krzysztof Kwaśniewski",
+	author_email="krzykwas@gmail.com",
+	url="http://rhqagent.blogspot.com/",
 
-	description = "RHQ agent gathering data from CIM servers",
-	long_description = """\
+	description="RHQ agent gathering data from CIM servers",
+	long_description="""\
 RHQ agent gathering data from CIM servers
 -----------------------------------------
 
@@ -67,7 +67,7 @@ source, you are bound to Python 2.x. Nevertheless there should be few
 changes needed to make the agent work with Python 3 if any at all.
 """,
 
-	classifiers = [
+	classifiers=[
 		"Programming Language :: Python",
 		"Programming Language :: Python :: 2.7",
 		"License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",

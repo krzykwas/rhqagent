@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Krzysztof „krzykwas” Kwaśniewski
 # Gdańsk, 15-10-2012
@@ -17,12 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-class CIMHandler(object):
+from abc import ABCMeta, abstractmethod
 
-	#Holds registered callbacks
+class CIMHandler(object):
+	__metaclass__ = ABCMeta
+
+	# Holds registered callbacks
 	__callbacks = []
 	
 	@staticmethod
+	@abstractmethod
 	def _fireEvent(indication):
 		"""
 		Executes all the registered callbacks when an event occurs.
@@ -31,6 +35,7 @@ class CIMHandler(object):
 			callback(indication)
 
 	@staticmethod
+	@abstractmethod
 	def register(callback):
 		"""
 		Registers a callback invoked when an event arrives.
@@ -38,6 +43,7 @@ class CIMHandler(object):
 		CIMHandler.__callbacks.append(callback)
 
 	@staticmethod
+	@abstractmethod
 	def unregister(callback):
 		"""
 		Unregisters a registered callback. For unregistered ones nothing is done.
