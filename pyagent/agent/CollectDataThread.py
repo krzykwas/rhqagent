@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Krzysztof „krzykwas” Kwaśniewski
 # Gdańsk, 12-06-2012
@@ -55,16 +55,13 @@ class CollectDataThread(Thread):
 		dataProvider = self.__dataProviders[srcServer]
 		value = dataProvider.getData(mappedObject)
 		timestamp = time.time()
+		
+		if value is None:
+			return
 				
 		for dstServerMapping in dataMapping.getDstServersMappings():
 			if dstServerMapping.isDue():
-				measurement = Measurement(
-					srcServer,
-					mappedObject,
-					dstServerMapping,
-					value,
-					timestamp
-				)
+				measurement = Measurement(srcServer, mappedObject, dstServerMapping, value, timestamp)
 				
 				self.__logger.debug("Metric for {0} takes value {1}".format(dataMapping, value))
 				
@@ -86,23 +83,21 @@ class CollectDataThread(Thread):
 					dataProvider = self.__dataProviders[srcServer]
 					value = dataProvider.getData(mappedObject)
 			
-					measurement = Measurement(
-						srcServer,
-						mappedObject,
-						dstServerMapping,
-						value,
-						timestamp
-					)
+					measurement = Measurement(srcServer, mappedObject, dstServerMapping, value, timestamp)
 
 					self.__pastMeasurementsManager.put(srcServer, mappedObject, measurement)
 					params.append(self.__pastMeasurementsManager.get(srcServer, mappedObject))
 					
-				result = callback(params)
+				try:
+					result = callback(params)
 
-				temp = ", ".join([str(param) for param in callback.getParams()])
-				self.__logger.debug("Artificial metric for {0} takes value {1}".format(temp, result))
+					temp = ", ".join([str(param) for param in callback.getParams()])
+					self.__logger.debug("Artificial metric for {0} takes value {1}".format(temp, result))
 				
-				artificialMeasurement = Measurement(None, None, dstServerMapping, result, time.time())
+					artificialMeasurement = Measurement(None, None, dstServerMapping, result, time.time())
 				
-				self.__pyAgent.getMetricsDataQueue().put(artificialMeasurement)
-				dstServerMapping.setLastAccessedNow()
+					self.__pyAgent.getMetricsDataQueue().put(artificialMeasurement)
+				except Exception as e:
+					self.__logger.error("Callback error: {0}".format(e))
+				finally:
+					dstServerMapping.setLastAccessedNow()

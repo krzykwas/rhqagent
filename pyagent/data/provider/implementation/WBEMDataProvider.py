@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Krzysztof „krzykwas” Kwaśniewski
 # Gdańsk, 25-05-2012
@@ -65,3 +65,5 @@ class WBEMDataProvider(AbstractDataProvider):
 			thread.interrupt_main()
 		except CIMError as e:
 			self.__logger.error("CIM exception for {0}: {1}".format(self.getSrcServer().getName(), e.args))
+		except IndexError as e:
+			self.__logger.error("In namespace {0} there is no instance #{1} of object {2} with attribute {3}.".format(namespace, index, name, attribute))
