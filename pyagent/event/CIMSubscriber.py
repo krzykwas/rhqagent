@@ -19,6 +19,7 @@
 
 import logging
 import pywbem
+import re
 import socket
 import time
 
@@ -30,12 +31,13 @@ class CIMSubscriber(object):
 
 	def __init__(self, uri, username, password, namespace="root/cimv2"):
 		"""
-		@param uri: CIM server uri, for instance: https://localhost:5988
+		@param uri: CIM server uri, for instance: https://localhost:5989
 		@param username, password: CIM server credentials
 		"""
 		
 		self.__FILTER_CREATION_CLASS_NAME = "CIM_IndicationFilter"
 		self.__HANDLER_CREATION_CLASS_NAME = "CIM_IndicationHandlerCIMXML"
+		self.__INTEROP_NAMESPACE = "root/PG_InterOp"
 		
 		self.__logger__ = logging.getLogger(__name__)
 		
@@ -48,7 +50,7 @@ class CIMSubscriber(object):
 
 	def subscribe(self, cimClassName, listenerPort, listenerHost=socket.gethostname()):
 		"""
-		Re-registers with a CIM server.
+		(Re-)registers with a CIM server.
 		"""
 		self.unsubscribe(cimClassName, listenerHost)
 		
@@ -76,12 +78,11 @@ class CIMSubscriber(object):
 				self.__logger__.error(e)
 			finally:
 				time.sleep(1)
-	
 
 	def __getBindings(self, listenerHost, creationClassName):
 		return {
-			"SystemCreationClassName": "OMC_UnitaryComputerSystem",
-			"SystemName": listenerHost,
+		 	"SystemCreationClassName": "CIM_ComputerSystem",
+		 	"SystemName": listenerHost,
 			"Name": "PyIndication",
 			"CreationClassName": creationClassName
 		}
@@ -90,21 +91,27 @@ class CIMSubscriber(object):
 		return pywbem.CIMInstanceName(
 			creationClassName,
 			keybindings=self.__getBindings(listenerHost, creationClassName),
-			namespace="root/interop",
+			namespace=self.__INTEROP_NAMESPACE,
 			host=host
 		)
 	
 	def __getSubscriptionBindings(self, listenerHost):
+		# Parse uri and take only the host name part.
+		try:
+			server = re.search(".*//([^:]*):?.*", self.__uri).group(1)
+		except:
+			server = self.__uri
+		
 		return {
-			"Filter": self.__getCIMInstanceName(listenerHost, self.__FILTER_CREATION_CLASS_NAME, self.__uri),
-			"Handler": self.__getCIMInstanceName(listenerHost, self.__HANDLER_CREATION_CLASS_NAME, self.__uri)
+			"Filter": self.__getCIMInstanceName(listenerHost, self.__FILTER_CREATION_CLASS_NAME, server),
+			"Handler": self.__getCIMInstanceName(listenerHost, self.__HANDLER_CREATION_CLASS_NAME, server)
 		}
 	
 	def __getSubscriptionName(self, listenerHost):
 		return pywbem.CIMInstanceName(
-			"SFCB_IndicationSubscription",
+			"CIM_IndicationSubscription",
 			keybindings=self.__getSubscriptionBindings(listenerHost),
-			namespace="root/interop"
+			namespace=self.__INTEROP_NAMESPACE
 		)
 	
 	def __createHandler(self, listenerHost):
@@ -118,9 +125,9 @@ class CIMSubscriber(object):
 			path=self.__getCIMInstanceName(listenerHost, self.__HANDLER_CREATION_CLASS_NAME)
 		)
 		handlerInstance["Destination"] = self.__uri
-		
-		return self.__client.CreateInstance(handlerInstance)
 	
+		return self.__client.CreateInstance(handlerInstance)
+
 	def __createFilter(self, listenerHost, cimClassName):
 		"""
 		@return: new filter instance's name
@@ -145,7 +152,7 @@ class CIMSubscriber(object):
 		subscriptionInstance["Filter"] = filterName
 		subscriptionInstance["Handler"] = handlerName
 		
-		try:
-			self.__client.CreateInstance(subscriptionInstance)
-		except:
-			pass
+		#try:
+		self.__client.CreateInstance(subscriptionInstance)
+		#except:
+		#	pass
