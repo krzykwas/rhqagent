@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Krzysztof „krzykwas” Kwaśniewski
 # Gdańsk, 18-07-2012
@@ -26,6 +26,7 @@ from ...data.model.callback.Callback import Callback
 from ...data.model.callback.Param import Param
 from ...exception.ConfigurationException import ConfigurationException
 from lxml import etree
+import logging
 
 class Parser(object):
 	"""
@@ -37,17 +38,22 @@ class Parser(object):
 		self.__settings = settings
 		self.__configurationFile = configurationFile
 		self.__schemaPath = schemaPath
+		self.__logger = logging.getLogger(__name__)
 
 	def parse(self):
 		config = etree.parse(self.__configurationFile)
-		self.__validateAgainstSchema()
 		
-		root = config.getroot()
+		try:
+			self.__validateAgainstSchema()
 		
-		self.__parseSrcServers(root.find("src-servers"))
-		self.__parseDstServers(root.find("dst-servers"))
-		self.__parseDataMappings(root.find("data-mappings"))
-		self.__parseCallbacks(root.find("callbacks"))
+			root = config.getroot()
+		
+			self.__parseSrcServers(root.find("src-servers"))
+			self.__parseDstServers(root.find("dst-servers"))
+			self.__parseDataMappings(root.find("data-mappings"))
+			self.__parseCallbacks(root.find("callbacks"))
+		except Exception as e:
+			self.__logger.error("Error while parsing the configuration file: {0}".format(e))
 				
 	def __validateAgainstSchema(self):
 		schema_doc = etree.parse(self.__schemaPath)
@@ -57,7 +63,7 @@ class Parser(object):
 		valid = schema.validate(xml)
 		
 		if not valid:
-			raise ConfigurationException("Configuration file invalid", schema.error_log)
+			raise ConfigurationException("Configuration file invalid.", schema.error_log)
 	
 	def __parseSrcServers(self, node):
 		for serverNode in node.findall("src-server"):

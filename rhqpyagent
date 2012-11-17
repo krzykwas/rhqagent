@@ -38,10 +38,11 @@ def startPyAgent(settings):
 	agent.beginWork()
 
 def main():
+	logging.basicConfig(level=logging.ERROR)
 	settings = getSettings()
 	
 	try:
-		logging.basicConfig(level=settings.getDebugLevel())
+		logging.getLogger().setLevel(settings.getDebugLevel())
 		logger = logging.getLogger(__name__)
 		
 		if settings.getSetup():

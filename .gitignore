@@ -1,3 +1,4 @@
 *.pyc
 *.swp
-pyagent/settings/settings.xml
+pyagent/settings/settings1.xml
+pyagent/settings/settings2.xml
