@@ -74,12 +74,11 @@ class CIMSubscriber(object):
 				self.__logger__.error(e)
 
 	def __getSystemName(self):
-		try:
-			for instance in self.__client.EnumerateInstances(self.__HANDLER_CREATION_CLASS_NAME, self.__INTEROP_NAMESPACE):
-				if instance["name"] == "PyAgentIndication":
-					return instance["systemName"]
-		except:
-			return None
+		for instance in self.__client.EnumerateInstances(self.__HANDLER_CREATION_CLASS_NAME, self.__INTEROP_NAMESPACE):
+			if instance["name"] == "PyAgentIndication":
+				return instance["systemName"]
+			
+		return None
 
 	def __getKeybindings(self, creationClassName):
 		keybindings = {
